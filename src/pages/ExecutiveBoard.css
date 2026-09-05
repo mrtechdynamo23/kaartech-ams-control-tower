@@ -1,0 +1,173 @@
+/* ═══════════════════════════════════════════════════
+   EDGE AMS Control Tower — Executive Board Styles
+   Premium and polished motion (Section 9)
+   ═══════════════════════════════════════════════════ */
+
+.executive-board {
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.eb-header-right {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+}
+
+.eb-section {
+  margin-bottom: var(--space-2xl);
+}
+
+.eb-section-title {
+  font-size: var(--text-md);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
+  margin-bottom: var(--space-base);
+  padding-bottom: var(--space-sm);
+  border-bottom: 1px solid var(--border-secondary);
+}
+
+.eb-tile-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--space-base);
+}
+
+.eb-tile-grid-3 {
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.eb-tile {
+  position: relative;
+  background: var(--bg-card);
+  border: 1px solid var(--border-secondary);
+  border-radius: var(--radius-lg);
+  padding: var(--space-lg);
+  cursor: pointer;
+  transition: all var(--transition-base);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-sm);
+}
+
+.eb-tile:hover {
+  border-color: var(--border-primary);
+  box-shadow: var(--card-shadow-hover);
+  transform: translateY(-2px);
+}
+
+.eb-tile:focus-visible {
+  outline: 2px solid var(--edge-primary);
+  outline-offset: 2px;
+}
+
+.eb-tile-accent {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+
+.eb-tile-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.eb-tile-label {
+  font-size: var(--text-sm);
+  font-weight: var(--font-medium);
+  color: var(--text-secondary);
+  line-height: var(--leading-tight);
+}
+
+.eb-tile-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.eb-tile-value {
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
+  line-height: 1;
+}
+
+.eb-tile-spark {
+  height: 30px;
+  margin: var(--space-xs) 0;
+}
+
+.eb-tile-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  flex-wrap: wrap;
+}
+
+.eb-tile-trend {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  padding: 1px 6px;
+  border-radius: var(--radius-full);
+}
+
+.eb-tile-trend.up { color: var(--color-green); background: var(--color-green-bg); }
+.eb-tile-trend.down { color: var(--color-red); background: var(--color-red-bg); }
+.eb-tile-trend.neutral { color: var(--text-tertiary); background: var(--bg-secondary); }
+
+.eb-tile-subtitle {
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  line-height: var(--leading-relaxed);
+}
+
+.eb-tile-chevron {
+  position: absolute;
+  bottom: var(--space-md);
+  right: var(--space-md);
+  color: var(--text-tertiary);
+  opacity: 0;
+  transition: opacity var(--transition-fast);
+}
+
+[dir="rtl"] .eb-tile-chevron {
+  right: auto;
+  left: var(--space-md);
+  transform: scaleX(-1);
+}
+
+.eb-tile:hover .eb-tile-chevron { opacity: 1; }
+
+.eb-footer-note {
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-base);
+  margin-top: var(--space-xl);
+  font-size: var(--text-xs);
+  color: var(--text-tertiary);
+  border-top: 1px solid var(--border-secondary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 1280px) {
+  .eb-tile-grid { grid-template-columns: repeat(2, 1fr); }
+  .eb-tile-grid-3 { grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 768px) {
+  .eb-tile-grid,
+  .eb-tile-grid-3 { grid-template-columns: 1fr; }
+}
