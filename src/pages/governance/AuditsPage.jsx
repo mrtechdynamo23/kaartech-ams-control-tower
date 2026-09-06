@@ -25,6 +25,7 @@ import KPICard from '../../components/common/KPICard';
 import ChartCard from '../../components/common/ChartCard';
 import DataTable from '../../components/common/DataTable';
 import DetailModal from '../../components/common/DetailModal';
+import { StatusBadge } from '../../components/common/Badges';
 import { useGovernanceStore } from '../../data/governanceStore';
 
 export default function AuditsPage() {
