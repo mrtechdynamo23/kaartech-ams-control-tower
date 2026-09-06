@@ -9,6 +9,7 @@
  * 5. TimesheetEntryModal: Weekly grid with RUN/CHANGE split and auto-populated approved leave
  */
 import React, { useState, useEffect, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, Check, AlertTriangle, Calendar, Clock, User, Shield, Briefcase,
   MapPin, CheckCircle2, ArrowRight, HelpCircle, FileText, Send, XCircle, Info
@@ -25,6 +26,11 @@ import {
   getTimesheetWeeklyData,
   isResourceAvailable
 } from '../../data/timeManagementStore';
+
+function PortalModal({ children }) {
+  if (typeof document === 'undefined') return children;
+  return createPortal(children, document.body);
+}
 
 // ═══════════════════════════════════════════════════
 // MODAL 1: APPLY LEAVE MODAL
@@ -104,7 +110,8 @@ export function ApplyLeaveModal({ isOpen, onClose, onSuccess }) {
   };
 
   return (
-    <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <PortalModal>
+      <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="edge-modal-card animate-scale-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '640px' }}>
         {/* Header */}
         <div className="edge-modal-header">
@@ -404,7 +411,8 @@ export function ApplyLeaveModal({ isOpen, onClose, onSuccess }) {
           </div>
         </form>
       </div>
-    </div>
+      </div>
+    </PortalModal>
   );
 }
 
@@ -452,7 +460,8 @@ export function ApprovalsModal({ isOpen, onClose, pendingLeaves = [], onActionSu
   };
 
   return (
-    <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <PortalModal>
+      <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="edge-modal-card animate-scale-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '880px', width: '92vw' }}>
         {/* Header */}
         <div className="edge-modal-header">
@@ -670,7 +679,8 @@ export function ApprovalsModal({ isOpen, onClose, pendingLeaves = [], onActionSu
           </button>
         </div>
       </div>
-    </div>
+      </div>
+    </PortalModal>
   );
 }
 
@@ -735,7 +745,8 @@ export function LeaveDetailModal({ isOpen, leave, onClose, onActionSuccess }) {
     : 'badge-neutral';
 
   return (
-    <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <PortalModal>
+      <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="edge-modal-card animate-scale-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '680px' }}>
         {/* Header */}
         <div className="edge-modal-header" style={{
@@ -1009,7 +1020,8 @@ export function LeaveDetailModal({ isOpen, leave, onClose, onActionSuccess }) {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+    </PortalModal>
   );
 }
 
@@ -1054,7 +1066,8 @@ export function RemoteWorkModal({ isOpen, onClose, onSuccess }) {
   };
 
   return (
-    <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <PortalModal>
+      <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="edge-modal-card animate-scale-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '540px' }}>
         <div className="edge-modal-header">
           <div>
@@ -1202,7 +1215,8 @@ export function RemoteWorkModal({ isOpen, onClose, onSuccess }) {
           </div>
         </form>
       </div>
-    </div>
+      </div>
+    </PortalModal>
   );
 }
 
@@ -1248,7 +1262,8 @@ export function TimesheetEntryModal({ isOpen, onClose, defaultResourceId = 'RES-
   };
 
   return (
-    <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
+    <PortalModal>
+      <div className="edge-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true">
       <div className="edge-modal-card animate-scale-up" onClick={e => e.stopPropagation()} style={{ maxWidth: '920px', width: '95vw' }}>
         <div className="edge-modal-header">
           <div>
@@ -1480,6 +1495,7 @@ export function TimesheetEntryModal({ isOpen, onClose, defaultResourceId = 'RES-
           </button>
         </div>
       </div>
-    </div>
+      </div>
+    </PortalModal>
   );
 }

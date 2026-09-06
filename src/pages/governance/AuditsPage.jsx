@@ -11,11 +11,12 @@
  * 3. Remediation Task Board (operational remediation tasks table with 9 exact columns)
  */
 import React, { useState, useMemo, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { useSearchParams } from 'react-router-dom';
 import {
   ShieldCheck, FileCheck, AlertCircle, CheckCircle, Plus, Calendar,
   Clock, AlertTriangle, CheckCircle2, TrendingUp, Layers, CheckSquare,
-  ArrowRight
+  ArrowRight, X
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
@@ -41,7 +42,43 @@ export default function AuditsPage() {
     findings,
     audits,
     getDerivedTaskStatus,
+    addAudit,
   } = useGovernanceStore();
+
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [successBanner, setSuccessBanner] = useState(null);
+
+  // Form State
+  const [auditTitle, setAuditTitle] = useState('');
+  const [auditDomain, setAuditDomain] = useState('R2R');
+  const [auditFramework, setAuditFramework] = useState('ISO 20000');
+  const [auditLead, setAuditLead] = useState('Omar Al Suwaidi');
+  const [auditDate, setAuditDate] = useState('2026-09-25');
+  const [auditScope, setAuditScope] = useState('');
+
+  const handleScheduleAudit = (e) => {
+    e.preventDefault();
+    if (!auditTitle.trim()) return;
+
+    const created = addAudit({
+      title: auditTitle.trim(),
+      businessDomain: auditDomain,
+      framework: auditFramework,
+      leadAuditor: auditLead.trim() || 'Omar Al Suwaidi',
+      status: 'Planned',
+      complianceScore: '96.0%',
+      complianceStatus: 'Compliant',
+      auditDate: auditDate,
+      description: auditScope.trim() || auditTitle.trim(),
+      scope: auditScope.trim() || 'Comprehensive operational control review and risk attestation.',
+    });
+
+    setIsScheduleModalOpen(false);
+    setAuditTitle('');
+    setAuditScope('');
+    setSuccessBanner(`Audit program ${created.id} scheduled successfully!`);
+    setTimeout(() => setSuccessBanner(null), 5000);
+  };
 
   // Sync tab with URL search parameter if it changes
   useEffect(() => {
@@ -322,12 +359,35 @@ export default function AuditsPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsScheduleModalOpen(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
             <Plus size={16} />
             <span>Schedule New Audit</span>
           </button>
         </div>
       </div>
+
+      {/* Success Notification Banner */}
+      {successBanner && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          background: 'rgba(21, 154, 106, 0.12)',
+          border: '1px solid var(--color-emerald)',
+          color: 'var(--color-emerald)',
+          padding: '12px 18px',
+          borderRadius: 'var(--radius-md)',
+          fontSize: 'var(--text-sm)',
+          fontWeight: 600,
+        }}>
+          <CheckCircle2 size={18} />
+          <span>{successBanner}</span>
+        </div>
+      )}
 
       {/* KPI Grid (Derived dynamically from actual active dataset — Section 10) */}
       <div
@@ -541,6 +601,249 @@ export default function AuditsPage() {
           setSelectedType(newType);
         }}
       />
+
+      {/* Centered Schedule New Audit Modal */}
+      {isScheduleModalOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="modal-overlay-centered"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(15, 23, 42, 0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '24px',
+          }}
+          onClick={() => setIsScheduleModalOpen(false)}
+        >
+          <div
+            className="modal-dialog-centered"
+            style={{
+              background: 'var(--bg-card, #ffffff)',
+              borderRadius: 'var(--radius-xl, 16px)',
+              border: '2px solid var(--border-secondary, #e2e8f0)',
+              boxShadow: 'var(--shadow-2xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25))',
+              maxWidth: '640px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              margin: 'auto',
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              animation: 'modalCenterScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{
+              padding: '20px 24px',
+              borderBottom: '1px solid var(--border-primary, #e2e8f0)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'var(--bg-secondary, #f8fafc)',
+              borderRadius: '16px 16px 0 0',
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <ShieldCheck size={18} color="var(--edge-primary, #FF5622)" />
+                  <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                    Schedule New Governance Audit
+                  </h3>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>
+                  Initialize formal compliance review program across enterprise landscape
+                </p>
+              </div>
+              <button
+                onClick={() => setIsScheduleModalOpen(false)}
+                className="btn btn-ghost btn-sm"
+                style={{ borderRadius: '50%', width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleScheduleAudit} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Audit Name & Objective *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Financial Close & Period End Reconciliation Review"
+                  value={auditTitle}
+                  onChange={(e) => setAuditTitle(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Business Domain
+                  </label>
+                  <select
+                    value={auditDomain}
+                    onChange={(e) => setAuditDomain(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="R2R">R2R (Record to Report)</option>
+                    <option value="L2C">L2C (Lead to Cash)</option>
+                    <option value="O2C">O2C (Order to Cash)</option>
+                    <option value="P2P">P2P (Procure to Pay)</option>
+                    <option value="H2R">H2R (Hire to Retire)</option>
+                    <option value="S2P">S2P (Source to Pay)</option>
+                    <option value="MFG">MFG (Manufacturing)</option>
+                    <option value="CRM">CRM (Customer Mgmt)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Framework / Standard
+                  </label>
+                  <select
+                    value={auditFramework}
+                    onChange={(e) => setAuditFramework(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="ISO 20000">ISO 20000 (Service Mgmt)</option>
+                    <option value="ISO 27001">ISO 27001 (InfoSec)</option>
+                    <option value="SOC2 Type II">SOC2 Type II (Trust Services)</option>
+                    <option value="Financial Controls">Financial Controls (SOX/COSO)</option>
+                    <option value="NESA">NESA (UAE Cyber Assurance)</option>
+                    <option value="ITIL v4">ITIL v4 Governance</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Lead Auditor
+                  </label>
+                  <input
+                    type="text"
+                    value={auditLead}
+                    onChange={(e) => setAuditLead(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Target Review Date
+                  </label>
+                  <input
+                    type="date"
+                    value={auditDate}
+                    onChange={(e) => setAuditDate(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Scope & Assessment Criteria
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Detail systems in scope, testing procedures, control frequency, and sample size..."
+                  value={auditScope}
+                  onChange={(e) => setAuditScope(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                    resize: 'vertical',
+                  }}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px',
+                marginTop: '12px',
+                paddingTop: '16px',
+                borderTop: '1px solid var(--border-primary, #e2e8f0)',
+              }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setIsScheduleModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <ShieldCheck size={14} />
+                  <span>Schedule Audit</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

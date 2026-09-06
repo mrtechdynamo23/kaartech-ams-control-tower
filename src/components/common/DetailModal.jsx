@@ -13,6 +13,7 @@
  * - Section 6: Task Detail Summary, Traceability links to Open Finding and Open Audit
  */
 import React, { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, Clock, User, Shield, AlertTriangle, FileText, CheckCircle2,
   ExternalLink, MessageSquare, History, Layers, Send, ArrowRight,
@@ -222,25 +223,10 @@ export default function DetailModal({
     ];
   }
 
-  return (
+  const modalContent = (
     <div
       className="modal-backdrop"
       onClick={onClose}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(15, 17, 20, 0.7)',
-        backdropFilter: 'blur(4px)',
-        zIndex: 1000,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '24px',
-        animation: 'fadeIn 0.2s ease-out',
-      }}
     >
       <div
         ref={modalRef}
@@ -1129,4 +1115,6 @@ export default function DetailModal({
       />
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

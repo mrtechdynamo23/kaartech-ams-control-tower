@@ -10,6 +10,7 @@
  * - High-contrast light & dark mode styling with crisp borders
  */
 import React, { useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, FileText, BookOpen, Layers, User, Calendar, ExternalLink,
   CheckCircle2, Tag, ArrowRight, ShieldCheck, Ticket, Sparkles, Copy
@@ -43,7 +44,7 @@ export default function KnowledgeDocumentModal({ isOpen, document: doc, onClose 
     }
   };
 
-  return (
+  const modalContent = (
     <div
       className="modal-overlay-centered animate-fade-in"
       onClick={onClose}
@@ -345,4 +346,6 @@ export default function KnowledgeDocumentModal({ isOpen, document: doc, onClose 
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

@@ -9,9 +9,10 @@
  * 4. Monthly Velocity & Effort Hours (Area / Multi-bar)
  */
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   Sparkles, Layers, Clock, CheckCircle2, GitPullRequest,
-  Plus, RefreshCw, Filter, ArrowRight, TrendingUp, Cpu
+  Plus, RefreshCw, Filter, ArrowRight, TrendingUp, Cpu, X, Shield, AlertCircle
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
@@ -35,6 +36,19 @@ export default function EnhancementsPage() {
     app: 'all',
   });
 
+  const [customEnhancements, setCustomEnhancements] = useState([]);
+  const [isSubmitModalOpen, setIsSubmitModalOpen] = useState(false);
+  const [successBanner, setSuccessBanner] = useState(null);
+
+  // Form State
+  const [newTitle, setNewTitle] = useState('');
+  const [newDomain, setNewDomain] = useState('L2C');
+  const [newApp, setNewApp] = useState('SAP S/4HANA FI-CO');
+  const [newHours, setNewHours] = useState(48);
+  const [newPriority, setNewPriority] = useState('High');
+  const [newRequester, setNewRequester] = useState('Sarah Al Marzooqi');
+  const [newDesc, setNewDesc] = useState('');
+
   const analytics = useMemo(() => {
     return getEnhancementAnalytics(filters);
   }, [filters]);
@@ -48,8 +62,40 @@ export default function EnhancementsPage() {
         list = list.filter(item => item.category === 'Major' || (item.timeCountHrs && item.timeCountHrs > 80));
       }
     }
-    return list;
-  }, [analytics.filteredList, selectedScaleFilter]);
+    return [...customEnhancements, ...list];
+  }, [analytics.filteredList, selectedScaleFilter, customEnhancements]);
+
+  const handleCreateEnhancement = (e) => {
+    e.preventDefault();
+    if (!newTitle.trim()) return;
+
+    const newId = `CR-00${analytics.filteredList.length + customEnhancements.length + 1}`;
+    const newRecord = {
+      id: newId,
+      title: newTitle.trim(),
+      shortDescription: newTitle.trim(),
+      description: newDesc.trim() || newTitle.trim(),
+      businessDomain: newDomain,
+      application: newApp,
+      timeCountHrs: Number(newHours) || 40,
+      effortHours: Number(newHours) || 40,
+      priority: newPriority,
+      status: 'Requirements',
+      category: Number(newHours) > 80 ? 'Major' : 'Minor',
+      requester: newRequester.trim() || 'AMS Service Manager',
+      assignedTo: 'Offshore Enhancement Lead',
+      createdDate: new Date().toISOString().split('T')[0],
+      track: 'ENH-OF-RUN',
+      businessBenefit: newDesc.trim() || 'Automated operational process modification for AdvantEDGE landscape.',
+    };
+
+    setCustomEnhancements(prev => [newRecord, ...prev]);
+    setIsSubmitModalOpen(false);
+    setNewTitle('');
+    setNewDesc('');
+    setSuccessBanner(`Enhancement ${newId} submitted successfully!`);
+    setTimeout(() => setSuccessBanner(null), 5000);
+  };
 
   const columns = [
     { key: 'id', label: 'CR ID', width: '110px' },
@@ -107,12 +153,35 @@ export default function EnhancementsPage() {
             <RefreshCw size={14} />
             <span>Reset View</span>
           </button>
-          <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsSubmitModalOpen(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
             <Plus size={16} />
             <span>Submit Enhancement Request</span>
           </button>
         </div>
       </div>
+
+      {/* Success Notification Banner */}
+      {successBanner && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          background: 'rgba(21, 154, 106, 0.12)',
+          border: '1px solid var(--color-emerald)',
+          color: 'var(--color-emerald)',
+          padding: '12px 18px',
+          borderRadius: 'var(--radius-md)',
+          fontSize: 'var(--text-sm)',
+          fontWeight: 600,
+        }}>
+          <CheckCircle2 size={18} />
+          <span>{successBanner}</span>
+        </div>
+      )}
 
       {/* Filter Bar */}
       <FilterBar
@@ -399,6 +468,280 @@ export default function EnhancementsPage() {
         onClose={() => setSelectedEnh(null)}
         type="enhancement"
       />
+
+      {/* Centered Submit Enhancement Request Modal */}
+      {isSubmitModalOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="modal-overlay-centered"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(15, 23, 42, 0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '24px',
+          }}
+          onClick={() => setIsSubmitModalOpen(false)}
+        >
+          <div
+            className="modal-dialog-centered"
+            style={{
+              background: 'var(--bg-card, #ffffff)',
+              borderRadius: 'var(--radius-xl, 16px)',
+              border: '2px solid var(--border-secondary, #e2e8f0)',
+              boxShadow: 'var(--shadow-2xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25))',
+              maxWidth: '640px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              margin: 'auto',
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              animation: 'modalCenterScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{
+              padding: '20px 24px',
+              borderBottom: '1px solid var(--border-primary, #e2e8f0)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'var(--bg-secondary, #f8fafc)',
+              borderRadius: '16px 16px 0 0',
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <Sparkles size={18} color="var(--edge-primary, #FF5622)" />
+                  <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                    Submit Enhancement Request
+                  </h3>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>
+                  Dedicated offshore workstream intake (&gt;32 Person-Hours)
+                </p>
+              </div>
+              <button
+                onClick={() => setIsSubmitModalOpen(false)}
+                className="btn btn-ghost btn-sm"
+                style={{ borderRadius: '50%', width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleCreateEnhancement} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Enhancement Title / Objective *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Automated Cross-Entity Invoicing for EDGE Business Units"
+                  value={newTitle}
+                  onChange={(e) => setNewTitle(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Business Domain
+                  </label>
+                  <select
+                    value={newDomain}
+                    onChange={(e) => setNewDomain(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="L2C">L2C (Lead to Cash)</option>
+                    <option value="O2C">O2C (Order to Cash)</option>
+                    <option value="P2P">P2P (Procure to Pay)</option>
+                    <option value="R2R">R2R (Record to Report)</option>
+                    <option value="H2R">H2R (Hire to Retire)</option>
+                    <option value="S2P">S2P (Source to Pay)</option>
+                    <option value="MFG">MFG (Manufacturing)</option>
+                    <option value="CRM">CRM (Customer Mgmt)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Application
+                  </label>
+                  <select
+                    value={newApp}
+                    onChange={(e) => setNewApp(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="SAP S/4HANA FI-CO">SAP S/4HANA FI-CO</option>
+                    <option value="SAP S/4HANA SD">SAP S/4HANA SD</option>
+                    <option value="SAP S/4HANA MM">SAP S/4HANA MM</option>
+                    <option value="SAP SuccessFactors">SAP SuccessFactors</option>
+                    <option value="Salesforce CRM">Salesforce CRM</option>
+                    <option value="Coupa Procurement">Coupa Procurement</option>
+                    <option value="Oracle Cloud ERP">Oracle Cloud ERP</option>
+                    <option value="ServiceNow ITSM">ServiceNow ITSM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Committed Hours (Scale)
+                  </label>
+                  <input
+                    type="number"
+                    min="32"
+                    step="8"
+                    value={newHours}
+                    onChange={(e) => setNewHours(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  />
+                  <span style={{ fontSize: '11px', color: 'var(--text-tertiary)', marginTop: '4px', display: 'block' }}>
+                    {Number(newHours) > 80 ? 'Classified as Major (>80h)' : 'Classified as Minor (≤80h)'}
+                  </span>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Priority
+                  </label>
+                  <select
+                    value={newPriority}
+                    onChange={(e) => setNewPriority(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Requester / Business Sponsor
+                </label>
+                <input
+                  type="text"
+                  value={newRequester}
+                  onChange={(e) => setNewRequester(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Functional Scope & Acceptance Criteria
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Outline the operational requirement, expected benefits, and technical dependencies..."
+                  value={newDesc}
+                  onChange={(e) => setNewDesc(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                    resize: 'vertical',
+                  }}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px',
+                marginTop: '12px',
+                paddingTop: '16px',
+                borderTop: '1px solid var(--border-primary, #e2e8f0)',
+              }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setIsSubmitModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <Sparkles size={14} />
+                  <span>Submit Request</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

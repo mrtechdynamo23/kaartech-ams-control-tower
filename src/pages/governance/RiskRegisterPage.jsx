@@ -4,24 +4,70 @@
  * 5x5 Risk Heat Map matrix and mitigation action plans (Section 31).
  * Strictly enforces semantic colors (Red = Critical, Amber = Medium, Green = Low).
  */
-import React, { useState } from 'react';
-import { ShieldAlert, AlertTriangle, CheckCircle, Plus, Eye, RefreshCw, Layers } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
+import { ShieldAlert, AlertTriangle, CheckCircle, Plus, Eye, RefreshCw, Layers, X, CheckCircle2 } from 'lucide-react';
 import KPICard from '../../components/common/KPICard';
 import DataTable from '../../components/common/DataTable';
 import DetailModal from '../../components/common/DetailModal';
-import { risks } from '../../data/demoData';
+import { risks as initialRisks } from '../../data/demoData';
 
 export default function RiskRegisterPage() {
   const [selectedRisk, setSelectedRisk] = useState(null);
   const [selectedSeverity, setSelectedSeverity] = useState('all');
 
-  const highRisks = risks.filter(r => r.severity === 'High' || r.severity === 'Critical');
-  const mediumRisks = risks.filter(r => r.severity === 'Medium');
-  const lowRisks = risks.filter(r => r.severity === 'Low');
+  const [customRisks, setCustomRisks] = useState([]);
+  const [isLogRiskModalOpen, setIsLogRiskModalOpen] = useState(false);
+  const [successBanner, setSuccessBanner] = useState(null);
+
+  // Form state
+  const [riskTitle, setRiskTitle] = useState('');
+  const [riskDomain, setRiskDomain] = useState('L2C');
+  const [riskCategory, setRiskCategory] = useState('Operational');
+  const [riskSeverity, setRiskSeverity] = useState('High');
+  const [riskOwner, setRiskOwner] = useState('Suresh N.');
+  const [riskDueDate, setRiskDueDate] = useState('2026-10-15');
+  const [riskMitigation, setRiskMitigation] = useState('');
+
+  const allRisks = useMemo(() => {
+    return [...customRisks, ...initialRisks];
+  }, [customRisks]);
+
+  const handleLogRisk = (e) => {
+    e.preventDefault();
+    if (!riskTitle.trim()) return;
+
+    const newId = `RSK-00${allRisks.length + 1}`;
+    const newRecord = {
+      id: newId,
+      title: riskTitle.trim(),
+      category: riskCategory,
+      businessDomain: riskDomain,
+      severity: riskSeverity,
+      inherentScore: riskSeverity === 'Critical' ? 20 : riskSeverity === 'High' ? 16 : riskSeverity === 'Medium' ? 12 : 6,
+      residualScore: riskSeverity === 'Critical' ? 8 : riskSeverity === 'High' ? 6 : 4,
+      owner: riskOwner.trim() || 'Enterprise Risk Lead',
+      status: 'Open',
+      dueDate: riskDueDate,
+      mitigationPlan: riskMitigation.trim() || 'Implement standard operating procedure controls and automated validation.',
+      impactDescription: riskMitigation.trim() || 'Operational disruption or SLA compliance risk.',
+    };
+
+    setCustomRisks(prev => [newRecord, ...prev]);
+    setIsLogRiskModalOpen(false);
+    setRiskTitle('');
+    setRiskMitigation('');
+    setSuccessBanner(`Risk ${newId} logged successfully into register!`);
+    setTimeout(() => setSuccessBanner(null), 5000);
+  };
+
+  const highRisks = allRisks.filter(r => r.severity === 'High' || r.severity === 'Critical');
+  const mediumRisks = allRisks.filter(r => r.severity === 'Medium');
+  const lowRisks = allRisks.filter(r => r.severity === 'Low');
 
   const filteredRisks = selectedSeverity === 'all'
-    ? risks
-    : risks.filter(r => r.severity?.toLowerCase() === selectedSeverity.toLowerCase());
+    ? allRisks
+    : allRisks.filter(r => r.severity?.toLowerCase() === selectedSeverity.toLowerCase());
 
   const columns = [
     { key: 'id', label: 'Risk ID', width: '110px' },
@@ -80,11 +126,34 @@ export default function RiskRegisterPage() {
           <p className="page-subtitle">Proactive risk identification, 5x5 exposure matrix, and residual risk mitigation governance.</p>
         </div>
 
-        <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+        <button
+          className="btn btn-primary"
+          onClick={() => setIsLogRiskModalOpen(true)}
+          style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+        >
           <Plus size={16} />
           <span>Log New Risk</span>
         </button>
       </div>
+
+      {/* Success Notification Banner */}
+      {successBanner && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          background: 'rgba(21, 154, 106, 0.12)',
+          border: '1px solid var(--color-emerald)',
+          color: 'var(--color-emerald)',
+          padding: '12px 18px',
+          borderRadius: 'var(--radius-md)',
+          fontSize: 'var(--text-sm)',
+          fontWeight: 600,
+        }}>
+          <CheckCircle2 size={18} />
+          <span>{successBanner}</span>
+        </div>
+      )}
 
       {/* KPI Strip */}
       <div style={{
@@ -225,6 +294,272 @@ export default function RiskRegisterPage() {
         onClose={() => setSelectedRisk(null)}
         type="risk"
       />
+
+      {/* Centered Log New Risk Modal */}
+      {isLogRiskModalOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="modal-overlay-centered"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(15, 23, 42, 0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '24px',
+          }}
+          onClick={() => setIsLogRiskModalOpen(false)}
+        >
+          <div
+            className="modal-dialog-centered"
+            style={{
+              background: 'var(--bg-card, #ffffff)',
+              borderRadius: 'var(--radius-xl, 16px)',
+              border: '2px solid var(--border-secondary, #e2e8f0)',
+              boxShadow: 'var(--shadow-2xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25))',
+              maxWidth: '640px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              margin: 'auto',
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              animation: 'modalCenterScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{
+              padding: '20px 24px',
+              borderBottom: '1px solid var(--border-primary, #e2e8f0)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'var(--bg-secondary, #f8fafc)',
+              borderRadius: '16px 16px 0 0',
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <ShieldAlert size={18} color="var(--edge-primary, #FF5622)" />
+                  <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                    Log New Operational Risk
+                  </h3>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>
+                  Enter potential exposure into the Enterprise 5x5 Risk Matrix
+                </p>
+              </div>
+              <button
+                onClick={() => setIsLogRiskModalOpen(false)}
+                className="btn btn-ghost btn-sm"
+                style={{ borderRadius: '50%', width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleLogRisk} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Risk Statement / Hazard Description *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Unplanned EDI middleware outage causing shipping delay"
+                  value={riskTitle}
+                  onChange={(e) => setRiskTitle(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Business Domain
+                  </label>
+                  <select
+                    value={riskDomain}
+                    onChange={(e) => setRiskDomain(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="L2C">L2C (Lead to Cash)</option>
+                    <option value="O2C">O2C (Order to Cash)</option>
+                    <option value="P2P">P2P (Procure to Pay)</option>
+                    <option value="R2R">R2R (Record to Report)</option>
+                    <option value="H2R">H2R (Hire to Retire)</option>
+                    <option value="S2P">S2P (Source to Pay)</option>
+                    <option value="MFG">MFG (Manufacturing)</option>
+                    <option value="CRM">CRM (Customer Mgmt)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Risk Category
+                  </label>
+                  <select
+                    value={riskCategory}
+                    onChange={(e) => setRiskCategory(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="Operational">Operational</option>
+                    <option value="Technical">Technical / Infrastructure</option>
+                    <option value="Security">Security & Compliance</option>
+                    <option value="Financial">Financial / Contractual</option>
+                    <option value="Resource">Staffing & Knowledge Retention</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Severity / Exposure
+                  </label>
+                  <select
+                    value={riskSeverity}
+                    onChange={(e) => setRiskSeverity(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="Critical">Critical (Inherent: 20)</option>
+                    <option value="High">High (Inherent: 16)</option>
+                    <option value="Medium">Medium (Inherent: 12)</option>
+                    <option value="Low">Low (Inherent: 6)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Risk Owner (RACI)
+                  </label>
+                  <input
+                    type="text"
+                    value={riskOwner}
+                    onChange={(e) => setRiskOwner(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Target Mitigation Due Date
+                </label>
+                <input
+                  type="date"
+                  value={riskDueDate}
+                  onChange={(e) => setRiskDueDate(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Mitigation Action Plan & Controls
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Detail preventative controls, failover procedures, and monitoring alerts..."
+                  value={riskMitigation}
+                  onChange={(e) => setRiskMitigation(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                    resize: 'vertical',
+                  }}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px',
+                marginTop: '12px',
+                paddingTop: '16px',
+                borderTop: '1px solid var(--border-primary, #e2e8f0)',
+              }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setIsLogRiskModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <ShieldAlert size={14} />
+                  <span>Log Risk</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

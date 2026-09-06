@@ -5,14 +5,15 @@
  * Customer Actions, Program Actions, Transition Actions, and Service Improvement CTAs (Section 24).
  */
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   ListChecks, AlertTriangle, CheckCircle, Plus, Clock, User,
-  Shield, Sparkles, Filter, RefreshCw, Layers
+  Shield, Sparkles, Filter, RefreshCw, Layers, X, CheckCircle2
 } from 'lucide-react';
 import KPICard from '../../components/common/KPICard';
 import DataTable from '../../components/common/DataTable';
 import DetailModal from '../../components/common/DetailModal';
-import { ctas } from '../../data/demoData';
+import { ctas as initialCtas } from '../../data/demoData';
 
 const ACTION_CATEGORIES = [
   'All Categories',
@@ -30,12 +31,54 @@ export default function ActionHubPage() {
   const [categoryFilter, setCategoryFilter] = useState('All Categories');
   const [statusFilter, setStatusFilter] = useState('all');
 
-  const openActions = ctas.filter(c => c.status === 'Open' || c.status === 'In Progress');
-  const overdueActions = ctas.filter(c => c.status === 'Overdue');
-  const completedActions = ctas.filter(c => c.status === 'Completed');
+  const [customCtas, setCustomCtas] = useState([]);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [successBanner, setSuccessBanner] = useState(null);
+
+  // Form State
+  const [actionTitle, setActionTitle] = useState('');
+  const [actionSource, setActionSource] = useState('Service Improvement');
+  const [actionOwner, setActionOwner] = useState('Suresh N.');
+  const [actionPriority, setActionPriority] = useState('High');
+  const [actionDueDate, setActionDueDate] = useState('2026-10-20');
+  const [actionDesc, setActionDesc] = useState('');
+
+  const allCtas = useMemo(() => {
+    return [...customCtas, ...initialCtas];
+  }, [customCtas]);
+
+  const handleCreateAction = (e) => {
+    e.preventDefault();
+    if (!actionTitle.trim()) return;
+
+    const newId = `CTA-00${allCtas.length + 1}`;
+    const newRecord = {
+      id: newId,
+      action: actionTitle.trim(),
+      description: actionDesc.trim() || actionTitle.trim(),
+      source: actionSource,
+      owner: actionOwner.trim() || 'Action Hub Lead',
+      status: 'Open',
+      priority: actionPriority,
+      dueDate: actionDueDate,
+      createdDate: new Date().toISOString().split('T')[0],
+      originatingWorkstream: actionSource,
+    };
+
+    setCustomCtas(prev => [newRecord, ...prev]);
+    setIsCreateModalOpen(false);
+    setActionTitle('');
+    setActionDesc('');
+    setSuccessBanner(`Action item ${newId} registered successfully!`);
+    setTimeout(() => setSuccessBanner(null), 5000);
+  };
+
+  const openActions = allCtas.filter(c => c.status === 'Open' || c.status === 'In Progress');
+  const overdueActions = allCtas.filter(c => c.status === 'Overdue');
+  const completedActions = allCtas.filter(c => c.status === 'Completed');
 
   const filteredCtas = useMemo(() => {
-    return ctas.filter(item => {
+    return allCtas.filter(item => {
       if (categoryFilter !== 'All Categories') {
         const itemSource = item.source || item.category || '';
         if (!itemSource.toLowerCase().includes(categoryFilter.toLowerCase().replace(' action', ''))) {
@@ -47,7 +90,7 @@ export default function ActionHubPage() {
       }
       return true;
     });
-  }, [categoryFilter, statusFilter]);
+  }, [allCtas, categoryFilter, statusFilter]);
 
   const columns = [
     { key: 'id', label: 'Action ID', width: '110px' },
@@ -75,7 +118,7 @@ export default function ActionHubPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <h1 className="page-title">Action Hub & CAPA</h1>
-            <span className="badge badge-primary">{ctas.length} Centralized Actions</span>
+            <span className="badge badge-primary">{allCtas.length} Centralized Actions</span>
             <span className="badge badge-success">Cross-Functional Governance</span>
           </div>
           <p className="page-subtitle">
@@ -84,12 +127,35 @@ export default function ActionHubPage() {
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
-          <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsCreateModalOpen(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
             <Plus size={16} />
             <span>Create Action Item</span>
           </button>
         </div>
       </div>
+
+      {/* Success Notification Banner */}
+      {successBanner && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          background: 'rgba(21, 154, 106, 0.12)',
+          border: '1px solid var(--color-emerald)',
+          color: 'var(--color-emerald)',
+          padding: '12px 18px',
+          borderRadius: 'var(--radius-md)',
+          fontSize: 'var(--text-sm)',
+          fontWeight: 600,
+        }}>
+          <CheckCircle2 size={18} />
+          <span>{successBanner}</span>
+        </div>
+      )}
 
       {/* KPI Tiles */}
       <div style={{
@@ -99,7 +165,7 @@ export default function ActionHubPage() {
       }}>
         <KPICard
           title="Total Action Items"
-          value={ctas.length}
+          value={allCtas.length}
           subtitle="Enterprise governance ledger"
           icon={ListChecks}
           sparklineData={[20, 24, 25, ctas.length]}
@@ -180,6 +246,246 @@ export default function ActionHubPage() {
         onClose={() => setSelectedAction(null)}
         type="action"
       />
+
+      {/* Centered Create Action Item Modal */}
+      {isCreateModalOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="modal-overlay-centered"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(15, 23, 42, 0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '24px',
+          }}
+          onClick={() => setIsCreateModalOpen(false)}
+        >
+          <div
+            className="modal-dialog-centered"
+            style={{
+              background: 'var(--bg-card, #ffffff)',
+              borderRadius: 'var(--radius-xl, 16px)',
+              border: '2px solid var(--border-secondary, #e2e8f0)',
+              boxShadow: 'var(--shadow-2xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25))',
+              maxWidth: '640px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              margin: 'auto',
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              animation: 'modalCenterScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{
+              padding: '20px 24px',
+              borderBottom: '1px solid var(--border-primary, #e2e8f0)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'var(--bg-secondary, #f8fafc)',
+              borderRadius: '16px 16px 0 0',
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <ListChecks size={18} color="var(--edge-primary, #FF5622)" />
+                  <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                    Create Action Item / CAPA
+                  </h3>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>
+                  Cross-functional commitment, corrective action, or service improvement
+                </p>
+              </div>
+              <button
+                onClick={() => setIsCreateModalOpen(false)}
+                className="btn btn-ghost btn-sm"
+                style={{ borderRadius: '50%', width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleCreateAction} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Action Item Title / Deliverable *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Automate daily journal verification before 7:00 AM batch run"
+                  value={actionTitle}
+                  onChange={(e) => setActionTitle(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Origin Stream
+                  </label>
+                  <select
+                    value={actionSource}
+                    onChange={(e) => setActionSource(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="Audit Action">Audit Action</option>
+                    <option value="Risk Action">Risk Action</option>
+                    <option value="Customer Action">Customer Action</option>
+                    <option value="Program Action">Program Action</option>
+                    <option value="Transition Action">Transition Action</option>
+                    <option value="Service Improvement">Service Improvement</option>
+                    <option value="General CTA">General CTA</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Priority
+                  </label>
+                  <select
+                    value={actionPriority}
+                    onChange={(e) => setActionPriority(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="Critical">Critical</option>
+                    <option value="High">High</option>
+                    <option value="Medium">Medium</option>
+                    <option value="Low">Low</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    RACI Owner
+                  </label>
+                  <input
+                    type="text"
+                    value={actionOwner}
+                    onChange={(e) => setActionOwner(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Target Due Date
+                  </label>
+                  <input
+                    type="date"
+                    value={actionDueDate}
+                    onChange={(e) => setActionDueDate(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Detailed Description & Success Criteria
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Outline the remediation approach, required tools, and sign-off criteria..."
+                  value={actionDesc}
+                  onChange={(e) => setActionDesc(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                    resize: 'vertical',
+                  }}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px',
+                marginTop: '12px',
+                paddingTop: '16px',
+                borderTop: '1px solid var(--border-primary, #e2e8f0)',
+              }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setIsCreateModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <ListChecks size={14} />
+                  <span>Register Action</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

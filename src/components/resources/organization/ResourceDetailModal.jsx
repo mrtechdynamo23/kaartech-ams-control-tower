@@ -10,6 +10,7 @@
  * - Core Skills, Certifications, Contact details
  */
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, Mail, Phone, MapPin, Building, Calendar, Award,
   Shield, CheckCircle2, ChevronRight, User, Users,
@@ -84,7 +85,7 @@ export default function ResourceDetailModal({
     if (onSelectResource) onSelectResource(targetId);
   };
 
-  return (
+  const modalContent = (
     <div
       className="modal-overlay-centered animate-fade-in"
       onClick={onClose}
@@ -672,4 +673,6 @@ export default function ResourceDetailModal({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

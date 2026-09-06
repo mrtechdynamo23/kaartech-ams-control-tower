@@ -1413,31 +1413,71 @@ h1, h2, h3, h4, h5, h6 { font-weight: var(--font-semibold); line-height: var(--l
   border-top: 1px solid var(--border-secondary);
 }
 
-/* ═══════════════════════ EDGE MODAL SYSTEM ═══════════════════════ */
-.edge-modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(10, 12, 16, 0.75);
-  backdrop-filter: blur(5px);
-  -webkit-backdrop-filter: blur(5px);
-  z-index: 1000;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
+/* ═══════════════════════ EDGE MODAL SYSTEM (TRUE VIEWPORT CENTERING) ═══════════════════════ */
+.edge-modal-backdrop,
+.modal-overlay-centered,
+.modal-backdrop,
+.modal-overlay,
+.cal-modal-backdrop {
+  position: fixed !important;
+  inset: 0 !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  background: rgba(10, 12, 16, 0.75) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  z-index: 9999 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  margin: 0 !important;
+  box-sizing: border-box !important;
+  overflow-y: auto !important;
   animation: fadeIn 0.15s ease-out;
 }
 
-.edge-modal-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border-secondary);
-  border-radius: var(--radius-xl);
-  width: 100%;
-  max-height: 88vh;
-  display: flex;
-  flex-direction: column;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-  overflow: hidden;
+.edge-modal-card,
+.modal-dialog-centered,
+.record-detail-modal,
+.modal,
+.cal-modal-dialog {
+  background: var(--bg-card) !important;
+  border: 1px solid var(--border-primary) !important;
+  border-radius: var(--radius-xl) !important;
+  width: 100% !important;
+  max-height: 88vh !important;
+  display: flex !important;
+  flex-direction: column !important;
+  box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.5), 0 0 0 1px var(--border-secondary) !important;
+  overflow: hidden !important;
+  margin: auto !important;
+  align-self: center !important;
+  position: relative !important;
+  animation: modalCenterScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+}
+
+[data-theme="light"] .edge-modal-card,
+[data-theme="light"] .modal-dialog-centered,
+[data-theme="light"] .record-detail-modal,
+[data-theme="light"] .modal {
+  border: 2px solid var(--border-primary, #CBD5E1) !important;
+  box-shadow: 0 25px 60px -15px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(15, 23, 42, 0.05) !important;
+}
+
+@keyframes modalCenterScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 .edge-modal-header {

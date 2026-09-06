@@ -10,10 +10,11 @@
  * - Centered DetailModal for record inspection
  */
 import React, { useState, useMemo } from 'react';
+import { createPortal } from 'react-dom';
 import {
   AlertOctagon, BookOpen, CheckCircle, Clock, FileText,
   Layers, Plus, RefreshCw, ArrowRight, ShieldCheck, CheckCircle2,
-  GitPullRequest, Wrench
+  GitPullRequest, Wrench, X
 } from 'lucide-react';
 import {
   PieChart, Pie, Cell, Tooltip, ResponsiveContainer,
@@ -35,20 +36,68 @@ export default function ProblemsPage() {
     app: 'all',
   });
 
+  const [customProblems, setCustomProblems] = useState([]);
+  const [isCreateProblemModalOpen, setIsCreateProblemModalOpen] = useState(false);
+  const [successBanner, setSuccessBanner] = useState(null);
+
+  // Form State
+  const [problemTitle, setProblemTitle] = useState('');
+  const [problemDomain, setProblemDomain] = useState('L2C');
+  const [problemApp, setProblemApp] = useState('SAP S/4HANA FI-CO');
+  const [problemPriority, setProblemPriority] = useState('P2 - High');
+  const [problemLead, setProblemLead] = useState('Omar Farooq');
+  const [problemIncidents, setProblemIncidents] = useState('INC-44912, INC-44988');
+  const [problemDescription, setProblemDescription] = useState('');
+
+  const allProblems = useMemo(() => {
+    return [...customProblems, ...problems];
+  }, [customProblems]);
+
   const filteredProblems = useMemo(() => {
-    return problems.filter((item) => {
+    return allProblems.filter((item) => {
       if (filters.domain !== 'all' && item.businessDomain !== filters.domain) return false;
       if (filters.status !== 'all' && item.status !== filters.status) return false;
       if (filters.app !== 'all' && item.application !== filters.app) return false;
       return true;
     });
-  }, [filters]);
+  }, [allProblems, filters]);
 
-  const openCount = problems.filter((p) => p.status === 'Open' || p.status === 'In Progress').length;
-  const rcaPendingCount = problems.filter((p) => p.rcaStatus === 'Pending' || p.rcaStatus === 'Not Started').length;
-  const rcaDeliveredCount = problems.filter((p) => p.rcaStatus === 'Delivered').length;
-  const correctiveActionCount = problems.filter((p) => p.status === 'Corrective Action').length;
-  const closedCount = problems.filter((p) => p.status === 'Closed').length;
+  const handleCreateProblem = (e) => {
+    e.preventDefault();
+    if (!problemTitle.trim()) return;
+
+    const newId = `PRB-00${allProblems.length + 1}`;
+    const incArray = problemIncidents.split(',').map(s => s.trim()).filter(Boolean);
+    const newRecord = {
+      id: newId,
+      shortDescription: problemTitle.trim(),
+      description: problemDescription.trim() || problemTitle.trim(),
+      application: problemApp,
+      businessDomain: problemDomain,
+      assignedTo: problemLead.trim() || 'Problem Management Lead',
+      status: 'Open',
+      rcaStatus: 'Pending',
+      incidentIds: incArray.length > 0 ? incArray : ['INC-44912'],
+      kedbArticle: null,
+      priority: problemPriority,
+      createdDate: new Date().toISOString().split('T')[0],
+      impact: 'Recurring critical operational impairment across landscape',
+      category: 'Defect Investigation',
+    };
+
+    setCustomProblems(prev => [newRecord, ...prev]);
+    setIsCreateProblemModalOpen(false);
+    setProblemTitle('');
+    setProblemDescription('');
+    setSuccessBanner(`Problem investigation ${newId} initiated successfully!`);
+    setTimeout(() => setSuccessBanner(null), 5000);
+  };
+
+  const openCount = allProblems.filter((p) => p.status === 'Open' || p.status === 'In Progress').length;
+  const rcaPendingCount = allProblems.filter((p) => p.rcaStatus === 'Pending' || p.rcaStatus === 'Not Started').length;
+  const rcaDeliveredCount = allProblems.filter((p) => p.rcaStatus === 'Delivered').length;
+  const correctiveActionCount = allProblems.filter((p) => p.status === 'Corrective Action').length;
+  const closedCount = allProblems.filter((p) => p.status === 'Closed').length;
 
   // RCA Health Data (Delivered vs Pending)
   const rcaHealthData = [
@@ -58,9 +107,9 @@ export default function ProblemsPage() {
 
   // Backlog by Status Data
   const statusBacklogData = [
-    { status: 'Open', count: problems.filter((p) => p.status === 'Open').length, color: '#7A8288' },
-    { status: 'In Progress', count: problems.filter((p) => p.status === 'In Progress').length, color: '#3B82C4' },
-    { status: 'RCA Identified', count: problems.filter((p) => p.status === 'Root Cause Identified').length, color: '#E5A000' },
+    { status: 'Open', count: allProblems.filter((p) => p.status === 'Open').length, color: '#7A8288' },
+    { status: 'In Progress', count: allProblems.filter((p) => p.status === 'In Progress').length, color: '#3B82C4' },
+    { status: 'RCA Identified', count: allProblems.filter((p) => p.status === 'Root Cause Identified').length, color: '#E5A000' },
     { status: 'Corrective Action', count: correctiveActionCount, color: '#7357B8' },
     { status: 'Closed', count: closedCount, color: '#159A6A' },
   ];
@@ -133,12 +182,35 @@ export default function ProblemsPage() {
             <RefreshCw size={14} />
             <span>Reset View</span>
           </button>
-          <button className="btn btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          <button
+            className="btn btn-primary"
+            onClick={() => setIsCreateProblemModalOpen(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+          >
             <Plus size={16} />
             <span>Open Problem Investigation</span>
           </button>
         </div>
       </div>
+
+      {/* Success Notification Banner */}
+      {successBanner && (
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px',
+          background: 'rgba(21, 154, 106, 0.12)',
+          border: '1px solid var(--color-emerald)',
+          color: 'var(--color-emerald)',
+          padding: '12px 18px',
+          borderRadius: 'var(--radius-md)',
+          fontSize: 'var(--text-sm)',
+          fontWeight: 600,
+        }}>
+          <CheckCircle2 size={18} />
+          <span>{successBanner}</span>
+        </div>
+      )}
 
       {/* Contractual Problem Lifecycle Visual Banner (Section 28) */}
       <div
@@ -356,6 +428,276 @@ export default function ProblemsPage() {
         onClose={() => setSelectedProblem(null)}
         type="problem"
       />
+
+      {/* Centered Open Problem Investigation Modal */}
+      {isCreateProblemModalOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="modal-overlay-centered"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            width: '100vw',
+            height: '100vh',
+            backgroundColor: 'rgba(15, 23, 42, 0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 99999,
+            padding: '24px',
+          }}
+          onClick={() => setIsCreateProblemModalOpen(false)}
+        >
+          <div
+            className="modal-dialog-centered"
+            style={{
+              background: 'var(--bg-card, #ffffff)',
+              borderRadius: 'var(--radius-xl, 16px)',
+              border: '2px solid var(--border-secondary, #e2e8f0)',
+              boxShadow: 'var(--shadow-2xl, 0 25px 50px -12px rgba(0, 0, 0, 0.25))',
+              maxWidth: '640px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              margin: 'auto',
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              animation: 'modalCenterScale 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{
+              padding: '20px 24px',
+              borderBottom: '1px solid var(--border-primary, #e2e8f0)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              background: 'var(--bg-secondary, #f8fafc)',
+              borderRadius: '16px 16px 0 0',
+            }}>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                  <AlertOctagon size={18} color="var(--edge-primary, #FF5622)" />
+                  <h3 style={{ fontSize: '18px', fontWeight: 700, margin: 0, color: 'var(--text-primary)' }}>
+                    Open Problem Investigation
+                  </h3>
+                </div>
+                <p style={{ fontSize: '12px', color: 'var(--text-tertiary)', margin: 0 }}>
+                  Initiate formal Root Cause Analysis (RCA) and defect prevention workflow
+                </p>
+              </div>
+              <button
+                onClick={() => setIsCreateProblemModalOpen(false)}
+                className="btn btn-ghost btn-sm"
+                style={{ borderRadius: '50%', width: '32px', height: '32px', padding: 0, display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Modal Form */}
+            <form onSubmit={handleCreateProblem} style={{ padding: '24px', display: 'flex', flexDirection: 'column', gap: '16px' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Problem Statement / Recurring Defect *
+                </label>
+                <input
+                  type="text"
+                  required
+                  placeholder="e.g., Recurring Intercompany Reconciliation Mismatch during Period End"
+                  value={problemTitle}
+                  onChange={(e) => setProblemTitle(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                  }}
+                />
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Business Domain
+                  </label>
+                  <select
+                    value={problemDomain}
+                    onChange={(e) => setProblemDomain(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="L2C">L2C (Lead to Cash)</option>
+                    <option value="O2C">O2C (Order to Cash)</option>
+                    <option value="P2P">P2P (Procure to Pay)</option>
+                    <option value="R2R">R2R (Record to Report)</option>
+                    <option value="H2R">H2R (Hire to Retire)</option>
+                    <option value="S2P">S2P (Source to Pay)</option>
+                    <option value="MFG">MFG (Manufacturing)</option>
+                    <option value="CRM">CRM (Customer Mgmt)</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Application
+                  </label>
+                  <select
+                    value={problemApp}
+                    onChange={(e) => setProblemApp(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="SAP S/4HANA FI-CO">SAP S/4HANA FI-CO</option>
+                    <option value="SAP S/4HANA SD">SAP S/4HANA SD</option>
+                    <option value="SAP S/4HANA MM">SAP S/4HANA MM</option>
+                    <option value="SAP SuccessFactors">SAP SuccessFactors</option>
+                    <option value="Salesforce CRM">Salesforce CRM</option>
+                    <option value="Coupa Procurement">Coupa Procurement</option>
+                    <option value="Oracle Cloud ERP">Oracle Cloud ERP</option>
+                    <option value="ServiceNow ITSM">ServiceNow ITSM</option>
+                  </select>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '14px' }}>
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Priority Level
+                  </label>
+                  <select
+                    value={problemPriority}
+                    onChange={(e) => setProblemPriority(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  >
+                    <option value="P1 - Critical">P1 - Critical</option>
+                    <option value="P2 - High">P2 - High</option>
+                    <option value="P3 - Medium">P3 - Medium</option>
+                    <option value="P4 - Low">P4 - Low</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                    Assigned Problem Lead
+                  </label>
+                  <input
+                    type="text"
+                    value={problemLead}
+                    onChange={(e) => setProblemLead(e.target.value)}
+                    style={{
+                      width: '100%',
+                      padding: '10px 14px',
+                      borderRadius: 'var(--radius-md, 8px)',
+                      border: '1px solid var(--border-primary, #cbd5e1)',
+                      background: 'var(--bg-input, #ffffff)',
+                      color: 'var(--text-primary)',
+                      fontSize: '13px',
+                    }}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Linked Incidents (Comma separated)
+                </label>
+                <input
+                  type="text"
+                  placeholder="INC-44912, INC-44988, INC-45012"
+                  value={problemIncidents}
+                  onChange={(e) => setProblemIncidents(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                  }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '12px', fontWeight: 600, color: 'var(--text-secondary)', marginBottom: '6px' }}>
+                  Symptom Analysis & Failure Symptoms
+                </label>
+                <textarea
+                  rows={3}
+                  placeholder="Detail recurring symptoms, business operational disruption, and preliminary triage findings..."
+                  value={problemDescription}
+                  onChange={(e) => setProblemDescription(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '10px 14px',
+                    borderRadius: 'var(--radius-md, 8px)',
+                    border: '1px solid var(--border-primary, #cbd5e1)',
+                    background: 'var(--bg-input, #ffffff)',
+                    color: 'var(--text-primary)',
+                    fontSize: '13px',
+                    resize: 'vertical',
+                  }}
+                />
+              </div>
+
+              {/* Action Buttons */}
+              <div style={{
+                display: 'flex',
+                justifyContent: 'flex-end',
+                gap: '12px',
+                marginTop: '12px',
+                paddingTop: '16px',
+                borderTop: '1px solid var(--border-primary, #e2e8f0)',
+              }}>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setIsCreateProblemModalOpen(false)}
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  className="btn btn-primary"
+                  style={{ display: 'flex', alignItems: 'center', gap: '6px' }}
+                >
+                  <AlertOctagon size={14} />
+                  <span>Initiate Investigation</span>
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>,
+        document.body
+      )}
     </div>
   );
 }

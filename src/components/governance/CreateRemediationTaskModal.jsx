@@ -4,6 +4,7 @@
  * Centered modal inheriting Related Audit & Related Finding automatically.
  */
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, CheckSquare, Shield, AlertCircle, Calendar, User, ArrowRight } from 'lucide-react';
 import { governanceStore, CURRENT_SIMULATED_DATE } from '../../data/governanceStore';
 
@@ -79,25 +80,10 @@ export default function CreateRemediationTaskModal({
   const auditId = finding.auditId || (audit ? audit.id : 'AUD-0001');
   const auditTitle = audit?.title || audit?.auditName || 'AMS Incident & SLA Governance Review';
 
-  return (
+  const modalContent = (
     <div
       className="modal-backdrop"
       onClick={onClose}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(15, 17, 20, 0.7)',
-        backdropFilter: 'blur(4px)',
-        zIndex: 1100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
-        animation: 'fadeIn 0.2s ease-out',
-      }}
     >
       <div
         className="record-detail-modal"
@@ -408,4 +394,6 @@ export default function CreateRemediationTaskModal({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

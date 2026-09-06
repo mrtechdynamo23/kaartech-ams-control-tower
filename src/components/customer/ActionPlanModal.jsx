@@ -4,6 +4,7 @@
  * Shows escalation context, remediation action items, traceability, and interactive completion.
  */
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X, AlertOctagon, CheckCircle2, Clock, User, Calendar,
   ArrowRight, ShieldAlert, CheckSquare, Layers, Link as LinkIcon
@@ -50,25 +51,10 @@ export default function ActionPlanModal({
 
   const hasActionPlan = actions && actions.length > 0;
 
-  return (
+  const modalContent = (
     <div
       className="modal-backdrop"
       onClick={onClose}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(15, 17, 20, 0.7)',
-        backdropFilter: 'blur(4px)',
-        zIndex: 1100,
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        padding: '20px',
-        animation: 'fadeIn 0.2s ease-out',
-      }}
     >
       <div
         className="record-detail-modal"
@@ -422,4 +408,6 @@ export default function ActionPlanModal({
       </div>
     </div>
   );
+
+  return typeof document !== 'undefined' ? createPortal(modalContent, document.body) : modalContent;
 }

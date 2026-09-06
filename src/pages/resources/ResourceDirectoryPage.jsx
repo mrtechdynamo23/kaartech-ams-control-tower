@@ -8,7 +8,7 @@
  * 3. Business Domain Allocation (Bar)
  * 4. Contractual Track Compliance Plan vs Actual (Bar)
  */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   Users, Shield, Award, MapPin, Phone, Mail, Plus,
   CheckCircle2, RefreshCw, UserCheck, Briefcase

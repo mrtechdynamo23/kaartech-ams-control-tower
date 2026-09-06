@@ -153,6 +153,37 @@ export const governanceStore = {
     notifyListeners();
   },
 
+  addAudit: (auditData) => {
+    const nextNum = globalAudits.reduce((max, a) => {
+      const match = a.id && a.id.match(/AUD-(\d+)/);
+      if (match) {
+        const num = parseInt(match[1], 10);
+        return num > max ? num : max;
+      }
+      return max;
+    }, 15) + 1;
+
+    const newId = `AUD-${String(nextNum).padStart(4, '0')}`;
+    const newAudit = {
+      id: newId,
+      title: auditData.title || 'New Governance Review',
+      businessDomain: auditData.businessDomain || 'R2R',
+      framework: auditData.framework || 'ISO 20000',
+      leadAuditor: auditData.leadAuditor || 'Omar Al Suwaidi',
+      status: auditData.status || 'Planned',
+      complianceScore: auditData.complianceScore || '96.0%',
+      complianceScoreNum: 96.0,
+      complianceStatus: auditData.complianceStatus || 'Compliant',
+      auditDate: auditData.auditDate || CURRENT_SIMULATED_DATE,
+      description: auditData.description || auditData.title,
+      scope: auditData.scope || 'Operational controls review',
+    };
+
+    globalAudits = [newAudit, ...globalAudits];
+    notifyListeners();
+    return newAudit;
+  },
+
   subscribe: (listener) => {
     listeners.add(listener);
     return () => listeners.delete(listener);
@@ -190,5 +221,6 @@ export function useGovernanceStore() {
     getTaskById: governanceStore.getTaskById,
     getFindingById: governanceStore.getFindingById,
     getAuditById: governanceStore.getAuditById,
+    addAudit: governanceStore.addAudit,
   };
 }
