@@ -53,11 +53,33 @@
 
 .hover-card:hover {
   background: var(--bg-hover) !important;
-  border-color: rgba(255, 86, 34, 0.3) !important;
+  border-color: rgba(255, 86, 34, 0.4) !important;
 }
 
 .hover-row:hover {
   background: var(--bg-hover) !important;
+}
+
+/* Clickable Resource Node & Hover Architecture */
+.org-node-interactive.resource-node {
+  cursor: pointer !important;
+  transition: all 0.18s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.org-node-interactive.resource-node:hover {
+  border-color: var(--edge-primary) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 86, 34, 0.2) !important;
+}
+
+[data-theme="light"] .org-node-interactive.resource-node {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+}
+
+[data-theme="light"] .org-node-interactive.resource-node:hover {
+  border-color: var(--edge-primary) !important;
+  box-shadow: 0 6px 18px rgba(255, 86, 34, 0.22) !important;
 }
 
 /* ── True Centered Modal Architecture ── */

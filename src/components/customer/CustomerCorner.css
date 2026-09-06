@@ -330,26 +330,117 @@
   border: 1px solid rgba(220, 38, 38, 0.25);
 }
 
-/* ─── Message Cards (Restrained conversation pattern with subtle left accent) ─── */
-.corner-message-card {
-  padding: 12px 14px;
-  border-radius: 8px;
+/* ─── WhatsApp-Style Conversation Architecture ─── */
+.corner-chat-flow {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  width: 100%;
+}
+
+.corner-chat-row {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  animation: fadeIn 0.18s ease-out;
+}
+
+.corner-chat-row.is-me {
+  align-items: flex-end;
+}
+
+.corner-chat-row.is-other {
+  align-items: flex-start;
+}
+
+/* Base Bubble */
+.corner-chat-bubble {
+  max-width: 78%;
+  min-width: 160px;
+  padding: 10px 14px 8px 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+  position: relative;
+  word-break: break-word;
+  transition: all 0.15s ease;
+}
+
+/* My Messages: RIGHT side, subtle EDGE orange tint */
+.corner-bubble-me {
+  border-radius: 16px 16px 3px 16px;
+  background: rgba(255, 86, 34, 0.13);
+  border: 1.5px solid rgba(255, 86, 34, 0.38);
+  color: var(--text-primary, #F1F3F5);
+}
+
+[data-theme="light"] .corner-bubble-me {
+  background: #FFF5F1 !important;
+  border: 1.5px solid #FDBA74 !important;
+  color: #1E293B !important;
+  box-shadow: 0 1px 3px rgba(234, 88, 12, 0.08) !important;
+}
+
+/* Other's Messages: LEFT side, professional neutral surface */
+.corner-bubble-other {
+  border-radius: 16px 16px 16px 3px;
+  background: var(--bg-card, #14181E);
+  border: 1.5px solid var(--border-primary, #2B323D);
+  color: var(--text-primary, #F1F3F5);
+}
+
+[data-theme="light"] .corner-bubble-other {
+  background: #FFFFFF !important;
+  border: 1.5px solid #CBD5E1 !important;
+  color: #0F172A !important;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.05) !important;
+}
+
+/* Bubble Metadata */
+.corner-bubble-meta {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+  margin-top: 4px;
+  font-size: 0.6875rem;
+  color: var(--text-tertiary, #6B7280);
+}
+
+[data-theme="light"] .corner-bubble-me .corner-bubble-meta {
+  color: #C2410C !important;
+}
+
+/* System notice pill */
+.corner-system-pill {
+  font-size: 0.6875rem;
+  color: var(--text-tertiary, #6B7280);
   background: var(--bg-secondary, #14181E);
   border: 1px solid var(--border-secondary, #21262E);
-  border-left: 3px solid transparent;
-  transition: background 0.15s ease;
+  border-radius: 9999px;
+  padding: 4px 14px;
+  text-align: center;
+  font-style: italic;
+  display: inline-block;
+  margin: 6px auto;
 }
 
-.corner-message-card.accent-edge {
-  border-left: 3px solid rgba(59, 130, 246, 0.7);
+[data-theme="light"] .corner-system-pill {
+  background: #F1F5F9 !important;
+  border-color: #CBD5E1 !important;
+  color: #475569 !important;
 }
 
-.corner-message-card.accent-ams {
-  border-left: 3px solid rgba(16, 185, 129, 0.7);
+/* RTL Support for Chat */
+[dir="rtl"] .corner-chat-row.is-me {
+  align-items: flex-start;
 }
-
-.corner-message-card.accent-third-party {
-  border-left: 3px solid rgba(156, 163, 175, 0.55);
+[dir="rtl"] .corner-bubble-me {
+  border-radius: 16px 16px 16px 3px;
+}
+[dir="rtl"] .corner-chat-row.is-other {
+  align-items: flex-end;
+}
+[dir="rtl"] .corner-bubble-other {
+  border-radius: 16px 16px 3px 16px;
 }
 
 /* ─── Thread List Items ───────────────────────────────────────────── */

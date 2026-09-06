@@ -1701,26 +1701,36 @@ function getKBArticleTitle(i, domainLabel) {
 // ═══════════════════════════════════════════════════
 // CUSTOMER FEEDBACK — DEMO
 // ═══════════════════════════════════════════════════
+// ═══════════════════════════════════════════════════
+// CUSTOMER FEEDBACK — DEMO (Section 62)
+// ═══════════════════════════════════════════════════
 function generateCustomerFeedback() {
   const feedback = [];
-  const ratings = ['Excellent', 'Good', 'Satisfactory', 'Poor'];
-  const ratingWeights = [0.35, 0.35, 0.20, 0.10]; // weighted to approximate CSAT targets
+  const ratingsConfig = [
+    { rating: 'Excellent', weight: 0.70, comment: 'Exceptional response speed and technical depth from AMS lead. Zero business impact on operations.' },
+    { rating: 'Very Good', weight: 0.18, comment: 'Issue resolved effectively within standard target. Proactive communication throughout.' },
+    { rating: 'Good',      weight: 0.08, comment: 'Service restored within SLA. Prompt acknowledgement appreciated during peak transaction hours.' },
+    { rating: 'Poor',      weight: 0.03, comment: 'Resolution took longer than expected. Escalation required multiple cross-domain handoffs.' },
+    { rating: 'Very Poor', weight: 0.01, comment: 'Resolution delayed past SLA window. Detailed Root Cause Analysis requested for SteerCom.' },
+  ];
 
-  for (let i = 1; i <= 30; i++) {
-    const rand = Math.random();
-    let rating;
-    if (rand < 0.35) rating = 'Excellent';
-    else if (rand < 0.70) rating = 'Good';
-    else if (rand < 0.90) rating = 'Satisfactory';
-    else rating = 'Poor';
+  // 40 realistic verified surveys with executive CSAT distribution
+  for (let i = 1; i <= 40; i++) {
+    // Deterministic distribution: 28 Excellent (70%), 7 Very Good (17.5%), 3 Good (7.5%), 1 Poor (2.5%), 1 Very Poor (2.5%)
+    let selected;
+    if (i <= 28) selected = ratingsConfig[0];
+    else if (i <= 35) selected = ratingsConfig[1];
+    else if (i <= 38) selected = ratingsConfig[2];
+    else if (i === 39) selected = ratingsConfig[3];
+    else selected = ratingsConfig[4];
 
     feedback.push({
       id: `CSAT-${String(i).padStart(4, '0')}`,
-      ticketId: `INC-${String(i).padStart(5, '0')}`,
-      rating,
-      comment: rating === 'Poor' ? 'Resolution took longer than expected. Communication could be improved.' : 'Issue resolved satisfactorily.',
-      respondent: RESOURCES[i % RESOURCES.length].name,
-      date: new Date(2026, 5 + (i % 4), 1 + (i % 28)).toISOString().split('T')[0],
+      ticketId: i % 2 === 0 ? `INC-${String(1000 + i).padStart(5, '0')}` : `SR-${String(2000 + i).padStart(5, '0')}`,
+      rating: selected.rating,
+      comment: selected.comment,
+      respondent: RESOURCES[(i * 3) % RESOURCES.length].name,
+      date: new Date(2026, 6 + (i % 2), 1 + (i % 28)).toISOString().split('T')[0],
       entity: ENTITIES[i % ENTITIES.length].name,
       classification: 'DEMO',
     });

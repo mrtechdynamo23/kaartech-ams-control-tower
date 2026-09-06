@@ -152,35 +152,201 @@ export default function DFRReportPage() {
         </div>
       </div>
 
-      {/* KPI Tiles */}
-      <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '16px', marginBottom: '24px' }}>
-        <KPICard
-          title="On Date Inflow & Closed"
-          value={`${inc.onDate.closed.total} Inc / ${sr.onDate.closed.total} SR`}
-          subtitle={`Report Date: ${snapshot.formattedDate}`}
-          icon={Activity}
-        />
-        <KPICard
-          title={`MTD Closed (${snapshot.currentMonthLabel})`}
-          value={`${inc.currentMonth.closed.total + sr.currentMonth.closed.total} Closed`}
-          status="success"
-          subtitle={`SR: ${sr.currentMonth.closed.total} · Inc: ${inc.currentMonth.closed.total}`}
-          icon={CheckCircle2}
-        />
-        <KPICard
-          title="SLA Compliance Rate"
-          value={`${inc.currentMonth.resolutionSlaPct.total} Res / ${inc.currentMonth.responseSlaPct.total} Resp`}
-          status="success"
-          subtitle="Contractual Target: 95.0%"
-          icon={ShieldCheck}
-        />
-        <KPICard
-          title="Active Exception Queue"
-          value={`${snapshot.slaAlertTickets.length} Alert / ${snapshot.breachedTickets.length} Breach`}
-          status={snapshot.breachedTickets.length > 0 ? 'warning' : 'success'}
-          subtitle={`${snapshot.holdTickets.length} tickets on stop-clock hold`}
-          icon={AlertTriangle}
-        />
+      {/* ─── PRIMARY SLA COMPLIANCE RATE EXECUTIVE TILE (One tile only per Head Feedback) ─── */}
+      <div
+        className="sla-compliance-tile border-thick-strategic"
+        style={{
+          background: 'var(--bg-card)',
+          borderRadius: 'var(--radius-lg)',
+          padding: '24px 28px',
+          marginBottom: '24px',
+          boxShadow: 'var(--card-shadow)',
+          position: 'relative',
+          overflow: 'hidden',
+        }}
+      >
+        {/* Tile Header */}
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: 12,
+            paddingBottom: '16px',
+            borderBottom: '1.5px solid var(--border-secondary)',
+            marginBottom: '20px',
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <div
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 'var(--radius-md)',
+                background: 'rgba(255, 86, 34, 0.12)',
+                color: 'var(--edge-primary)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <ShieldCheck size={22} />
+            </div>
+            <div>
+              <div style={{ fontSize: '0.9375rem', fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: 'var(--text-primary)' }}>
+                SLA Compliance Rate
+              </div>
+              <div style={{ fontSize: '0.8125rem', color: 'var(--text-tertiary)' }}>
+                DFR Operational Performance Pulse · Month to Date ({snapshot.currentMonthLabel}) · Contractual Benchmark ≥ 95.0%
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 5,
+                fontSize: '0.75rem',
+                fontWeight: 700,
+                color: '#10B981',
+                background: 'rgba(16, 185, 129, 0.12)',
+                border: '1px solid rgba(16, 185, 129, 0.28)',
+                padding: '4px 12px',
+                borderRadius: '9999px',
+              }}
+            >
+              <CheckCircle2 size={13} /> 100% Contractual Compliance
+            </span>
+          </div>
+        </div>
+
+        {/* Two Distinct Measures: IRT and MPT side-by-side */}
+        <div
+          style={{
+            display: 'grid',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '24px',
+          }}
+        >
+          {/* Measure 1: IRT */}
+          <div
+            style={{
+              padding: '20px 24px',
+              background: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+              border: '1.5px solid var(--border-primary)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+              boxShadow: 'var(--shadow-xs)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--edge-primary)', letterSpacing: '0.04em' }}>
+                  IRT
+                </div>
+                <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                  Response
+                </div>
+              </div>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>
+                {inc.currentMonth.responseSlaPct.total || '100%'}
+              </div>
+            </div>
+
+            {/* Horizontal progress bar */}
+            <div
+              style={{
+                height: 12,
+                width: '100%',
+                background: 'var(--bg-tertiary)',
+                borderRadius: 9999,
+                overflow: 'hidden',
+                border: '1px solid var(--border-secondary)',
+              }}
+            >
+              <div
+                style={{
+                  height: '100%',
+                  width: `${parseInt(inc.currentMonth.responseSlaPct.total || '100', 10)}%`,
+                  background: 'linear-gradient(90deg, #10B981 0%, #059669 100%)',
+                  borderRadius: 9999,
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem' }}>
+              <span style={{ color: '#10B981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <CheckCircle2 size={13} /> Within Target
+              </span>
+              <span style={{ color: 'var(--text-tertiary)' }}>
+                Target: ≥ 95.0% · On-Date: {inc.onDate.responseSlaPct.total || '100%'}
+              </span>
+            </div>
+          </div>
+
+          {/* Measure 2: MPT */}
+          <div
+            style={{
+              padding: '20px 24px',
+              background: 'var(--bg-secondary)',
+              borderRadius: 'var(--radius-md)',
+              border: '1.5px solid var(--border-primary)',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 12,
+              boxShadow: 'var(--shadow-xs)',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
+              <div>
+                <div style={{ fontSize: '1.25rem', fontWeight: 800, color: 'var(--edge-primary)', letterSpacing: '0.04em' }}>
+                  MPT
+                </div>
+                <div style={{ fontSize: '0.8125rem', fontWeight: 600, color: 'var(--text-secondary)' }}>
+                  Resolution
+                </div>
+              </div>
+              <div style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--text-primary)', lineHeight: 1 }}>
+                {inc.currentMonth.resolutionSlaPct.total || '100%'}
+              </div>
+            </div>
+
+            {/* Horizontal progress bar */}
+            <div
+              style={{
+                height: 12,
+                width: '100%',
+                background: 'var(--bg-tertiary)',
+                borderRadius: 9999,
+                overflow: 'hidden',
+                border: '1px solid var(--border-secondary)',
+              }}
+            >
+              <div
+                style={{
+                  height: '100%',
+                  width: `${parseInt(inc.currentMonth.resolutionSlaPct.total || '100', 10)}%`,
+                  background: 'linear-gradient(90deg, #10B981 0%, #059669 100%)',
+                  borderRadius: 9999,
+                }}
+              />
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem' }}>
+              <span style={{ color: '#10B981', fontWeight: 700, display: 'flex', alignItems: 'center', gap: 4 }}>
+                <CheckCircle2 size={13} /> Within Target
+              </span>
+              <span style={{ color: 'var(--text-tertiary)' }}>
+                Target: ≥ 95.0% · On-Date: {inc.onDate.resolutionSlaPct.total || '100%'}
+              </span>
+            </div>
+          </div>
+        </div>
       </div>
 
       {/* Section Navigation Tabs */}

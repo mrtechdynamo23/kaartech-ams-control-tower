@@ -93,6 +93,34 @@ export function getResourceById(resId) {
 // ── Build Enriched Resource with Direct Reports & Computed Fields ──
 export function getEnrichedResources() {
   const resourceMap = new Map();
+
+  // Include LEAD-01 (SteerCom Program Director)
+  const director = LEADERSHIP_STEERCOM[0];
+  resourceMap.set('LEAD-01', {
+    id: 'LEAD-01',
+    positionId: 'POS-DIR-001',
+    name: director.name,
+    role: director.role,
+    businessDomain: 'Executive',
+    processGroup: 'SteerCom Governance',
+    track: 'AMS-ON-RUN',
+    allocation: 'Dedicated',
+    nationality: 'UAE',
+    location: 'Onsite',
+    onboardingDate: '2025-06-01',
+    reportingManager: null,
+    status: 'Active',
+    gender: 'Male',
+    skill: 'Executive Leadership, SteerCom Governance, Defense IT Strategy',
+    certification: 'PMP, ITIL v4 Master, TOGAF 9.2',
+    phone: director.phone || '+971-2-XXX-0001',
+    email: director.email || 'tariq.alnuaimi@edge.ae',
+    entity: 'ENT-001',
+    entityObj: getEntityById('ENT-001'),
+    directReports: ['RES-002'],
+    managerInfo: { id: 'CIO', name: 'EDGE Group CIO', role: 'Group CIO', businessDomain: 'Executive' },
+  });
+
   RESOURCES.forEach(res => {
     resourceMap.set(res.id, {
       ...res,
@@ -114,7 +142,7 @@ export function getEnrichedResources() {
         role: manager.role,
         businessDomain: manager.businessDomain,
       };
-    } else if (!res.reportingManager) {
+    } else if (!res.reportingManager && res.id !== 'LEAD-01') {
       // Top delivery lead reports to Program Director
       res.managerInfo = {
         id: 'LEAD-01',

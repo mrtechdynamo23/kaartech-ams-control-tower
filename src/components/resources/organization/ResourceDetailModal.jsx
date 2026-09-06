@@ -51,7 +51,9 @@ export default function ResourceDetailModal({
   if (!isOpen) return null;
 
   const enrichedList = getEnrichedResources();
-  const res = enrichedList.find(r => r.id === currentResourceId) || initialResource;
+  const rawId = typeof currentResourceId === 'object' ? currentResourceId?.id : currentResourceId;
+  const normalizedId = (rawId || '').replace(/^res-/, '');
+  const res = enrichedList.find(r => r.id === rawId || r.id === normalizedId) || initialResource;
   if (!res) return null;
 
   // Calculate days since onboarding

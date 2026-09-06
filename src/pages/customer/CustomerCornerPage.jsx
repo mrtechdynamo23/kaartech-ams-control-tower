@@ -9,9 +9,10 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   MessagesSquare, Tag, Megaphone, Search, CheckCircle2, RotateCcw, PencilLine,
-  TicketCheck, Send, Users, CalendarClock, AlertTriangle, Inbox,
+  TicketCheck, Send, Users, CalendarClock, AlertTriangle, Inbox, CheckCheck,
 } from 'lucide-react';
 import { useCustomerCorner } from '../../contexts/CustomerCornerContext';
+import { useAuth } from '../../contexts/AuthContext';
 import {
   cornerStakeholders, stakeholderById, SIDE_META, CORNER_FORUMS, STAKEHOLDER_SIDES,
   lastActivityAt, waitingOn, isCtaOverdue, buildTicketRefs,
@@ -110,6 +111,7 @@ export default function CustomerCornerPage() {
   const [showConvert, setShowConvert] = useState(false);
 
   const messagesRef = useRef(null);
+  const { user } = useAuth() || {};
   const tickets = useMemo(() => buildTicketRefs(), []);
   const ticketById = useMemo(() => new Map(tickets.map((t) => [t.id, t])), [tickets]);
   const me = stakeholderById(activeStakeholderId);
@@ -206,6 +208,13 @@ export default function CustomerCornerPage() {
       setSelectedId(visibleThreads[0].id);
     }
   }, [visibleThreads, selectedId]);
+
+  // Auto-scroll chat to bottom on new message or thread switch
+  useEffect(() => {
+    if (messagesRef.current) {
+      messagesRef.current.scrollTop = messagesRef.current.scrollHeight;
+    }
+  }, [selectedId, selected?.messages?.length]);
 
   const openThread = (id) => {
     setSelectedId(id);
@@ -843,45 +852,67 @@ export default function CustomerCornerPage() {
                 }}
                 className="corner-custom-scrollbar"
               >
-                {selected.messages.map((message) => {
+                {selected.messages.map((message, index) => {
                   const author = stakeholderById(message.authorId);
                   if (message.kind === 'system') {
                     return (
                       <div
                         key={message.id}
                         style={{
-                          fontSize: '0.6875rem',
-                          color: 'var(--text-tertiary, #6B7280)',
-                          textAlign: 'center',
-                          fontStyle: 'italic',
-                          padding: '4px 0',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          width: '100%',
+                          margin: '4px 0',
                         }}
                       >
-                        {author?.name ?? message.authorId} — <MessageBody body={message.body} /> · {formatCornerTime(message.postedAt)}
+                        <div className="corner-system-pill">
+                          {author?.name ?? message.authorId} — <MessageBody body={message.body} /> · {formatCornerTime(message.postedAt)}
+                        </div>
                       </div>
                     );
                   }
-                  const side = author?.side || 'THIRD PARTY';
-                  const accentClass = side === 'EDGE' ? 'accent-edge' : side === 'AMS' ? 'accent-ams' : 'accent-third-party';
+
+                  const isMe = (message.authorId === activeStakeholderId) || (user && (message.authorId === user.id || message.authorId === user.name));
+                  const prevMsg = index > 0 ? selected.messages[index - 1] : null;
+                  const isConsecutive = prevMsg && prevMsg.authorId === message.authorId && prevMsg.kind !== 'system';
+
                   return (
-                    <div key={message.id} className={`corner-message-card ${accentClass}`}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap', marginBottom: 5 }}>
-                        <strong style={{ fontSize: '0.8125rem', color: 'var(--text-primary, #F1F3F5)' }}>
-                          {author?.name ?? message.authorId}
-                        </strong>
-                        <SideBadge id={message.authorId} compact />
-                        <span style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary, #6B7280)' }}>
-                          {author?.title}
-                        </span>
-                        {message.kind === 'decision' && (
-                          <span className="corner-badge-decision">DECISION</span>
+                    <div
+                      key={message.id}
+                      className={`corner-chat-row ${isMe ? 'is-me' : 'is-other'}`}
+                      style={{ marginTop: isConsecutive ? '4px' : '10px' }}
+                    >
+                      <div className={`corner-chat-bubble ${isMe ? 'corner-bubble-me' : 'corner-bubble-other'}`}>
+                        {/* Sender header for incoming messages (shown on first of consecutive sequence) */}
+                        {!isMe && !isConsecutive && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: 6, marginBottom: 4, flexWrap: 'wrap' }}>
+                            <strong style={{ fontSize: '0.8125rem', color: 'var(--text-primary)', fontWeight: 700 }}>
+                              {author?.name ?? message.authorId}
+                            </strong>
+                            <SideBadge id={message.authorId} compact />
+                            {author?.title && (
+                              <span style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)' }}>
+                                · {author.title}
+                              </span>
+                            )}
+                            {message.kind === 'decision' && (
+                              <span className="corner-badge-decision" style={{ marginLeft: 'auto' }}>DECISION</span>
+                            )}
+                          </div>
                         )}
-                        <span style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary, #6B7280)', marginLeft: 'auto' }}>
-                          {formatCornerTime(message.postedAt)}
-                        </span>
-                      </div>
-                      <div style={{ fontSize: '0.8125rem', color: 'var(--text-primary, #F1F3F5)', lineHeight: 1.6 }}>
-                        <MessageBody body={message.body} />
+
+                        {/* Message body */}
+                        <div style={{ fontSize: '0.84rem', lineHeight: 1.55 }}>
+                          <MessageBody body={message.body} />
+                        </div>
+
+                        {/* Bubble metadata: Timestamp & Read checkmark */}
+                        <div className="corner-bubble-meta">
+                          <span>{formatCornerTime(message.postedAt)}</span>
+                          {isMe && (
+                            <CheckCheck size={14} style={{ color: 'var(--edge-primary, #FF5622)', marginLeft: 3, flexShrink: 0 }} />
+                          )}
+                        </div>
                       </div>
                     </div>
                   );

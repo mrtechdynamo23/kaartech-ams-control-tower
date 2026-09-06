@@ -14,7 +14,7 @@ export function ThemeProvider({ children }) {
       const stored = localStorage.getItem('edge-ams-theme');
       if (stored === 'dark' || stored === 'light') return stored;
     } catch {}
-    return 'dark'; // Dark mode is now the PRIMARY and default experience
+    return 'light'; // Light mode is now the PRIMARY experience per Head Feedback
   });
 
   const [reducedMotion, setReducedMotion] = useState(() =>

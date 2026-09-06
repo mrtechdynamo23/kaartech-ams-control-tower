@@ -99,7 +99,17 @@ export default function OrganizationCanvas({
 
   // Pan handlers
   const handleMouseDown = (e) => {
-    if (e.target.closest('.org-node-interactive') || e.target.closest('.canvas-control-btn') || e.target.closest('.domain-focus-pill')) {
+    if (
+      e.target.closest('.org-node-interactive') ||
+      e.target.closest('.resource-node') ||
+      e.target.closest('.team-card') ||
+      e.target.closest('.domain-card') ||
+      e.target.closest('.hover-card') ||
+      e.target.closest('.canvas-control-btn') ||
+      e.target.closest('.domain-focus-pill') ||
+      e.target.closest('.member-change-badge') ||
+      e.target.closest('button')
+    ) {
       return;
     }
     setIsDragging(true);
@@ -463,7 +473,26 @@ export default function OrganizationCanvas({
             </div>
 
             {/* SteerCom Director Profile */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+            <div
+              onClick={(e) => {
+                e.stopPropagation();
+                onOpenResource('LEAD-01');
+              }}
+              className="org-node-interactive hover-card"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '12px',
+                marginBottom: '12px',
+                padding: '8px 10px',
+                borderRadius: 'var(--radius-sm)',
+                background: 'var(--bg-secondary)',
+                border: '1px solid var(--border-secondary)',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+              }}
+              title="Click to view Dr. Tariq Al Nuaimi (Program Director) profile"
+            >
               <div
                 style={{
                   width: '44px',
@@ -478,11 +507,12 @@ export default function OrganizationCanvas({
                   fontSize: '14px',
                   boxShadow: '0 4px 10px rgba(255, 86, 34, 0.3)',
                   border: '2px solid rgba(255, 255, 255, 0.2)',
+                  flexShrink: 0,
                 }}
               >
                 TN
               </div>
-              <div>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <div style={{ fontSize: '1.05rem', fontWeight: 800, color: 'var(--text-primary)' }}>
                   {tree.director.name}
                 </div>
@@ -490,6 +520,9 @@ export default function OrganizationCanvas({
                   {tree.director.role} • {tree.director.entity}
                 </div>
               </div>
+              <span style={{ fontSize: '10px', color: 'var(--edge-primary)', fontWeight: 700, whiteSpace: 'nowrap' }}>
+                Profile →
+              </span>
             </div>
 
             {/* Sub-Command Leads: Operational & Governance */}
@@ -912,7 +945,18 @@ export default function OrganizationCanvas({
                             </div>
 
                             <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '4px', fontSize: '10px', color: 'var(--text-secondary)' }}>
-                              <span>Lead: {team.lead ? team.lead.name.split(' ')[0] : 'Lead'}</span>
+                              <span
+                                onClick={(e) => {
+                                  if (team.lead) {
+                                    e.stopPropagation();
+                                    onOpenResource(team.lead.id);
+                                  }
+                                }}
+                                style={{ cursor: 'pointer', color: 'var(--text-primary)', fontWeight: 600 }}
+                                title={`Click to view team lead: ${team.lead ? team.lead.name : 'Lead'}`}
+                              >
+                                Lead: {team.lead ? team.lead.name.split(' ')[0] : 'Lead'}
+                              </span>
                               <span>•</span>
                               <span>{team.onsiteCount} Onsite · {team.offshoreCount} Offshore</span>
                             </div>
@@ -997,7 +1041,8 @@ export default function OrganizationCanvas({
                                 return (
                                   <div
                                     key={memberNode.id}
-                                    onClick={() => {
+                                    onClick={(e) => {
+                                      e.stopPropagation();
                                       onSelectNode(memberNode.id);
                                       onOpenResource(member.id);
                                     }}
@@ -1009,7 +1054,7 @@ export default function OrganizationCanvas({
                                         ? '2px solid var(--edge-primary)'
                                         : isMemberMatched
                                         ? '2px solid var(--edge-primary)'
-                                        : '1px solid var(--border-primary)',
+                                        : '1.5px solid var(--border-primary)',
                                       borderRadius: 'var(--radius-sm)',
                                       padding: '8px 10px',
                                       cursor: 'pointer',
@@ -1017,7 +1062,7 @@ export default function OrganizationCanvas({
                                       boxShadow: isMemberSelected ? '0 4px 12px rgba(255, 86, 34, 0.2)' : 'var(--card-shadow)',
                                       opacity: memberDimmed ? 0.35 : 1,
                                     }}
-                                    title="Click to view detailed specialist profile"
+                                    title={`Click to inspect specialist profile: ${member.name} (${member.id})`}
                                   >
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                       {/* Status Dot + Initials */}
