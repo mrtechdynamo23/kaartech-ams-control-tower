@@ -163,10 +163,10 @@ export default function RiskRegisterPage() {
       }}>
         <KPICard
           title="Total Tracked Risks"
-          value={risks.length}
+          value={allRisks.length}
           subtitle="Across operational landscape"
           icon={ShieldAlert}
-          sparklineData={[12, 14, 15, risks.length]}
+          sparklineData={[12, 14, 15, allRisks.length]}
         />
         <KPICard
           title="Critical / High Risks"
@@ -247,7 +247,7 @@ export default function RiskRegisterPage() {
               style={{ justifyContent: 'space-between' }}
             >
               <span>All Tracked Risks</span>
-              <span>{risks.length}</span>
+              <span>{allRisks.length}</span>
             </button>
             <button
               onClick={() => setSelectedSeverity('critical')}

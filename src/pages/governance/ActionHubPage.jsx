@@ -168,7 +168,7 @@ export default function ActionHubPage() {
           value={allCtas.length}
           subtitle="Enterprise governance ledger"
           icon={ListChecks}
-          sparklineData={[20, 24, 25, ctas.length]}
+          sparklineData={[20, 24, 25, allCtas.length]}
         />
         <KPICard
           title="Active In-Progress"

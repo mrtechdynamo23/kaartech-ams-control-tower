@@ -8,7 +8,7 @@
  * Motion: Restrained (Section 9)
  * Demo credentials: centralized in AuthContext (Section 10)
  */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { useLanguage } from '../contexts/LanguageContext';
@@ -30,7 +30,7 @@ export default function LoginPage() {
   const [success, setSuccess] = useState(false);
 
   // Redirect if already authenticated (inside useEffect to prevent React render warning)
-  React.useEffect(() => {
+  useEffect(() => {
     if (isAuthenticated) {
       navigate('/landing', { replace: true });
     }

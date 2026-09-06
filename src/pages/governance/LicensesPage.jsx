@@ -104,7 +104,7 @@ export default function LicensesPage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <h1 className="page-title">Software License Governance</h1>
-            <span className="badge badge-primary">{licenses.length} Enterprise Subscriptions</span>
+            <span className="badge badge-primary">{allLicenses.length} Enterprise Subscriptions</span>
           </div>
           <p className="page-subtitle">Monitor entitlement compliance, consumption thresholds, and OEM renewal calendars.</p>
         </div>
