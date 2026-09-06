@@ -187,7 +187,11 @@ export default function ExecutiveBoardPage() {
               </defs>
               <XAxis dataKey="month" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
               <YAxis domain={[80, 100]} stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '11px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '11px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '6px' }} />
               <Area type="monotone" dataKey="Resolution" stroke="#0D9F6E" fillOpacity={1} fill="url(#slaResGrad)" strokeWidth={2} name="Resolution SLA %" />
               <Area type="monotone" dataKey="Response" stroke="#2563EB" fillOpacity={1} fill="url(#slaRespGrad)" strokeWidth={1.5} name="Response SLA %" />
@@ -220,7 +224,11 @@ export default function ExecutiveBoardPage() {
                   <Cell key={`cell-${index}`} fill={entry.color} />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '11px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '11px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '4px' }} />
             </PieChart>
           </ResponsiveContainer>
@@ -281,7 +289,11 @@ export default function ExecutiveBoardPage() {
             <BarChart data={boardData.resourceCompliance} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <XAxis dataKey="track" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
               <YAxis stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '11px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '11px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '4px' }} />
               <Bar dataKey="Plan" fill="#71777C" radius={[4, 4, 0, 0]} name="Plan Required" />
               <Bar dataKey="Actual" fill="#FF5622" radius={[4, 4, 0, 0]} name="Actual Deployed" />

@@ -123,8 +123,11 @@ export default function AutomationPage() {
                 borderColor: 'var(--border-primary)',
                 borderRadius: 'var(--radius-md)',
                 fontSize: 'var(--text-xs)',
+                color: 'var(--text-primary)',
                 boxShadow: 'var(--shadow-lg)'
               }}
+              labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+              itemStyle={{ color: 'var(--text-primary)' }}
               formatter={(val, name, props) => [`${val} Candidates`, props.payload.desc]}
             />
             <Bar dataKey="count" name="Automation Use-Cases" radius={[4, 4, 0, 0]} barSize={32}>

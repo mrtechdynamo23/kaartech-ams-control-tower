@@ -3,7 +3,7 @@
  * Features: Sorting, Search, Pagination, Column Visibility, CSV Export,
  * Row Selection, Custom Cell Renderers, Row Click Drilldown, Responsive.
  */
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   ChevronDown, ChevronUp, ChevronsUpDown, Download, Eye,
   Search, ChevronLeft, ChevronRight, SlidersHorizontal, Check
@@ -35,6 +35,17 @@ export default function DataTable({
   const [pageSize, setPageSize] = useState(initialPageSize);
   const [visibleColumns, setVisibleColumns] = useState(() => columns.map(c => c.key));
   const [showColMenu, setShowColMenu] = useState(false);
+
+  // Sync visible columns and reset page when columns prop changes
+  useEffect(() => {
+    setVisibleColumns(columns.map(c => c.key));
+    if (defaultSortField) {
+      setSortField(defaultSortField);
+    } else if (columns[0] && !columns.some(c => c.key === sortField)) {
+      setSortField(columns[0].key);
+    }
+    setPage(1);
+  }, [columns, defaultSortField]);
 
   // Filter by search query
   const filteredData = useMemo(() => {
@@ -146,8 +157,16 @@ export default function DataTable({
       return `AED ${val.toLocaleString()}`;
     }
 
+    if (col.key === 'id' && typeof val === 'string' && val.startsWith('AUD-')) {
+      return (
+        <span style={{ color: 'var(--edge-primary, #FF5622)', fontWeight: 700, letterSpacing: '0.02em' }}>
+          {val}
+        </span>
+      );
+    }
+
     if (val === undefined || val === null || val === '') {
-      return <span style={{ color: 'var(--text-tertiary)', opacity: 0.4 }}>—</span>;
+      return <span style={{ color: 'var(--text-tertiary)', opacity: 0.6, fontSize: 'var(--text-xs)' }}>{col.emptyText || 'N/A'}</span>;
     }
     return String(val);
   };

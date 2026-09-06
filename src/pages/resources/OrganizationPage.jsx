@@ -1,80 +1,228 @@
 /**
  * EDGE AMS Control Tower — Organization Structure
  * Route: /resources/organization
- * 3-Tier Support Hierarchy & Governance Framework.
+ * 
+ * Enterprise Command & Control Organization Structure Page
+ * Implements all specifications from ANTIGRAVITY MASTER IMPLEMENTATION PROMPT:
+ * - EDGE Resource Master is the source of truth
+ * - 4-tier functional organization hierarchy (SteerCom -> Domains -> Teams -> Resources)
+ * - Three synchronized view modes:
+ *     1. Structure View: Interactive organization canvas with zoom, pan, expand/collapse, active path illumination
+ *     2. Team Overview: NOC-inspired capability breakdown, tower leadership matrices, domain & location mix analytics
+ *     3. Resource Roster: Searchable master personnel roster with fast profile inspection
+ * - Deep drill-down modals for both Teams (TeamDetailModal) and Specialists (ResourceDetailModal)
+ * - Recent Organization Changes drawer for governance and personnel movement auditing
+ * - Fully responsive, dark mode primary, light mode compatible, RTL support
  */
-import React from 'react';
-import { Users, Shield, Award, ChevronRight, User } from 'lucide-react';
-import KPICard from '../../components/common/KPICard';
+import React, { useState, useMemo, useEffect, useCallback } from 'react';
+import {
+  buildOrganizationTree,
+  solveHierarchyMatches,
+  getEnrichedResources,
+  getOrganizationMetrics
+} from '../../data/organizationData';
+import OrganizationHeader from '../../components/resources/organization/OrganizationHeader';
+import OrganizationSummaryStrip from '../../components/resources/organization/OrganizationSummaryStrip';
+import OrganizationCanvas from '../../components/resources/organization/OrganizationCanvas';
+import TeamOverviewView from '../../components/resources/organization/TeamOverviewView';
+import ResourceRosterView from '../../components/resources/organization/ResourceRosterView';
+import TeamDetailModal from '../../components/resources/organization/TeamDetailModal';
+import ResourceDetailModal from '../../components/resources/organization/ResourceDetailModal';
+import RecentChangesDrawer from '../../components/resources/organization/RecentChangesDrawer';
+import './OrganizationPage.css';
 
 export default function OrganizationPage() {
-  const leadership = [
-    { role: 'EDGE AMS Program Director', name: 'Dr. Tariq Al Nuaimi', entity: 'EDGE Group HQ', focus: 'Strategic Alignment & SteerCom' },
-    { role: 'AMS Delivery Lead', name: 'Fatima Al Zaabi', entity: 'EDGE Business Services', focus: 'Service Level & Operational Delivery' },
-    { role: 'Quality & Governance Lead', name: 'Sara Al Marzouqi', entity: 'EDGE Technologies', focus: 'Audit, Risk & Continuous Improvement' },
-  ];
+  // ── View Mode: 'structure' | 'teams' | 'roster' ──
+  const [activeView, setActiveView] = useState('structure');
 
-  const domainLeads = [
-    { domain: 'L2C', name: 'Khalid Al Hashimi', role: 'Lead-to-Cash Functional Lead', track: 'AMS-ON-RUN' },
-    { domain: 'R2R', name: 'Fatima Al Zaabi', role: 'Record-to-Report Functional Lead', track: 'AMS-ON-RUN' },
-    { domain: 'P2P', name: 'Ravi Shankar', role: 'Procure-to-Pay Lead', track: 'AMS-OF-RUN' },
-    { domain: 'E2M', name: 'Priya Nair', role: 'Estimate-to-Manufacture Lead', track: 'AMS-OF-RUN' },
-    { domain: 'D2S', name: 'Omar Bashar', role: 'Demand-to-Supply Lead', track: 'AMS-ON-RUN' },
-    { domain: 'S2P', name: 'Noura Al Shamsi', role: 'Source-to-Pay Lead', track: 'AMS-ON-RUN' },
-    { domain: 'H2R', name: 'Sara Al Marzouqi', role: 'Hire-to-Retire Lead', track: 'AMS-ON-RUN' },
-    { domain: 'A2D', name: 'Tariq Al Dhaheri', role: 'Acquire-to-Decommission Lead', track: 'AMS-ON-RUN' },
-  ];
+  // ── Search & Filter State ──
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({
+    domain: 'all',
+    location: 'all',
+    track: 'all',
+    status: 'all',
+  });
+
+  // ── Build Canonical Tree Model & Enriched Resources ──
+  const orgTree = useMemo(() => buildOrganizationTree(), []);
+  const enrichedResources = useMemo(() => getEnrichedResources(), []);
+  const metrics = useMemo(() => getOrganizationMetrics(), []);
+
+  // ── Node Expansion State ──
+  // Initially expand all 8 business domains for immediate visual clarity
+  const initialExpanded = useMemo(() => {
+    const set = new Set();
+    orgTree.children.forEach(domain => {
+      set.add(domain.id);
+    });
+    return set;
+  }, [orgTree]);
+
+  const [expandedNodeIds, setExpandedNodeIds] = useState(initialExpanded);
+  const [selectedNodeId, setSelectedNodeId] = useState(null);
+
+  // ── Modal States ──
+  const [selectedResourceId, setSelectedResourceId] = useState(null);
+  const [isResourceModalOpen, setIsResourceModalOpen] = useState(false);
+  const [selectedTeam, setSelectedTeam] = useState(null);
+  const [isTeamModalOpen, setIsTeamModalOpen] = useState(false);
+  const [isRecentChangesOpen, setIsRecentChangesOpen] = useState(false);
+  const [fitTrigger, setFitTrigger] = useState(0);
+
+  const handleFitToScreen = useCallback(() => {
+    setFitTrigger(t => t + 1);
+  }, []);
+
+  // ── Solve Search & Filter Path Ancestry ──
+  const searchMatches = useMemo(() => {
+    return solveHierarchyMatches(orgTree, searchTerm, filters);
+  }, [orgTree, searchTerm, filters]);
+
+  // When search or filter changes, auto-expand ancestors so matched nodes are visible
+  useEffect(() => {
+    if (searchMatches.isFilterActive && searchMatches.ancestorNodeIds.size > 0) {
+      setExpandedNodeIds(prev => {
+        const next = new Set(prev);
+        searchMatches.ancestorNodeIds.forEach(id => next.add(id));
+        return next;
+      });
+    }
+  }, [searchMatches]);
+
+  // ── Tree Expansion Handlers ──
+  const handleToggleNode = useCallback((nodeId) => {
+    setExpandedNodeIds(prev => {
+      const next = new Set(prev);
+      if (next.has(nodeId)) {
+        next.delete(nodeId);
+      } else {
+        next.add(nodeId);
+      }
+      return next;
+    });
+  }, []);
+
+  const handleExpandAll = useCallback(() => {
+    const allIds = new Set();
+    allIds.add(orgTree.id);
+    orgTree.children.forEach(domain => {
+      allIds.add(domain.id);
+      domain.children.forEach(team => {
+        allIds.add(team.id);
+      });
+    });
+    setExpandedNodeIds(allIds);
+  }, [orgTree]);
+
+  const handleCollapseAll = useCallback(() => {
+    setExpandedNodeIds(new Set());
+    setSelectedNodeId(null);
+  }, []);
+
+  const handleResetFilters = useCallback(() => {
+    setSearchTerm('');
+    setFilters({ domain: 'all', location: 'all', track: 'all', status: 'all' });
+  }, []);
+
+  // ── Modal Openers ──
+  const handleOpenResource = useCallback((resId) => {
+    setSelectedResourceId(resId);
+    setIsResourceModalOpen(true);
+  }, []);
+
+  const handleOpenTeam = useCallback((team) => {
+    setSelectedTeam(team);
+    setIsTeamModalOpen(true);
+  }, []);
+
+  const handleSelectNode = useCallback((nodeId) => {
+    setSelectedNodeId(nodeId);
+  }, []);
 
   return (
     <div className="organization-page animate-fade-in">
-      {/* Header */}
-      <div className="page-header">
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h1 className="page-title">Organization Structure & Support Hierarchy</h1>
-            <span className="badge badge-primary">3-Tier Governance</span>
-          </div>
-          <p className="page-subtitle">Organizational accountability, domain functional leads, and operational escalation authority.</p>
-        </div>
-      </div>
+      {/* ── Top Header & Command Toolbar ── */}
+      <OrganizationHeader
+        activeView={activeView}
+        onViewChange={setActiveView}
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        filters={filters}
+        onFilterChange={setFilters}
+        onResetFilters={handleResetFilters}
+        onExpandAll={handleExpandAll}
+        onCollapseAll={handleCollapseAll}
+        onFitToScreen={handleFitToScreen}
+        onOpenRecentChanges={() => setIsRecentChangesOpen(true)}
+        matchCount={searchMatches.matchCount}
+        isFilterActive={searchMatches.isFilterActive}
+      />
 
-      {/* Leadership SteerCom */}
-      <div className="chart-card" style={{ marginBottom: '24px' }}>
-        <h3 className="chart-card-title">Governance Leadership & SteerCom</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-          {leadership.map((lead, idx) => (
-            <div key={idx} style={{ background: 'var(--bg-secondary)', padding: '16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-secondary)', display: 'flex', gap: '12px', alignItems: 'center' }}>
-              <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'var(--edge-primary)', color: 'white', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 700 }}>
-                {lead.name.charAt(0)}
-              </div>
-              <div>
-                <div style={{ fontSize: 'var(--text-xs)', color: 'var(--edge-primary)', fontWeight: 700 }}>{lead.role}</div>
-                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)' }}>{lead.name}</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{lead.entity} • {lead.focus}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* ── Organization Summary Enterprise KPI Strip ── */}
+      <OrganizationSummaryStrip
+        onFilterClick={(f) => setFilters(prev => ({ ...prev, ...f }))}
+      />
 
-      {/* Domain Functional Leads */}
-      <div className="chart-card">
-        <h3 className="chart-card-title">Business Domain Functional Leads</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '14px' }}>
-          {domainLeads.map((dl, idx) => (
-            <div key={idx} style={{ background: 'var(--bg-secondary)', padding: '14px 16px', borderRadius: 'var(--radius-md)', border: '1px solid var(--border-secondary)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '2px' }}>
-                  <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--edge-primary)' }}>{dl.domain}</span>
-                  <span style={{ fontSize: '10px', background: 'var(--bg-tertiary)', padding: '1px 5px', borderRadius: '4px' }}>{dl.track}</span>
-                </div>
-                <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)' }}>{dl.name}</div>
-                <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>{dl.role}</div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* ── Main Workspace Views ── */}
+      {activeView === 'structure' && (
+        <OrganizationCanvas
+          tree={orgTree}
+          expandedNodeIds={expandedNodeIds}
+          onToggleNode={handleToggleNode}
+          selectedNodeId={selectedNodeId}
+          onSelectNode={handleSelectNode}
+          searchMatches={searchMatches}
+          onOpenResource={handleOpenResource}
+          onOpenTeam={handleOpenTeam}
+          onFilterDomain={(domainKey) => setFilters(prev => ({ ...prev, domain: domainKey }))}
+          fitTrigger={fitTrigger}
+          onOpenChanges={() => setIsRecentChangesOpen(true)}
+        />
+      )}
+
+      {activeView === 'teams' && (
+        <TeamOverviewView
+          onOpenResource={handleOpenResource}
+          onOpenTeam={handleOpenTeam}
+          onFilterByDomain={(domainKey) => setFilters(prev => ({ ...prev, domain: domainKey }))}
+          onOpenChanges={() => setIsRecentChangesOpen(true)}
+        />
+      )}
+
+      {activeView === 'roster' && (
+        <ResourceRosterView
+          resources={enrichedResources}
+          onOpenResource={handleOpenResource}
+          searchTerm={searchTerm}
+          filters={filters}
+        />
+      )}
+
+      {/* ── Deep Team Detail Modal ── */}
+      <TeamDetailModal
+        isOpen={isTeamModalOpen}
+        team={selectedTeam}
+        onClose={() => setIsTeamModalOpen(false)}
+        onSelectResource={(resId) => {
+          setIsTeamModalOpen(false);
+          handleOpenResource(resId);
+        }}
+      />
+
+      {/* ── Deep Resource Personnel Profile Modal ── */}
+      <ResourceDetailModal
+        isOpen={isResourceModalOpen}
+        resourceId={selectedResourceId}
+        onClose={() => setIsResourceModalOpen(false)}
+        onSelectResource={(newResId) => setSelectedResourceId(newResId)}
+      />
+
+      {/* ── Recent Organization Changes Drawer ── */}
+      <RecentChangesDrawer
+        isOpen={isRecentChangesOpen}
+        onClose={() => setIsRecentChangesOpen(false)}
+      />
     </div>
   );
 }

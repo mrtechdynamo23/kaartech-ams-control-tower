@@ -24,6 +24,7 @@
  */
 
 import { EVENT_TYPES, EVENT_TYPE_CONFIG } from './calendarTypes';
+import { getLeaveRecords } from '../../data/timeManagementStore';
 import {
   leaveRecords,
   momRecords,
@@ -268,41 +269,45 @@ function normalizeTitleAndShort(type, rawTitle, extraContext = '') {
 export function normalizeCalendarEvents() {
   const events = [];
 
-  // 1. LEAVE RECORDS (Source: demoData.js -> leaveRecords)
-  if (Array.isArray(leaveRecords)) {
-    leaveRecords.forEach(l => {
-      const cfg = EVENT_TYPE_CONFIG[EVENT_TYPES.LEAVE];
-      const rawTitle = `${l.employee || 'Consultant'} — ${l.leaveType || 'Leave'}`;
-      const { title, shortTitle } = normalizeTitleAndShort(EVENT_TYPES.LEAVE, rawTitle);
+  // 1. LEAVE RECORDS (Source: timeManagementStore -> getLeaveRecords())
+  const activeLeaves = (getLeaveRecords() || []).filter(l => l.status === 'Approved' || l.status === 'Pending Approval');
+  activeLeaves.forEach(l => {
+    const cfg = EVENT_TYPE_CONFIG[EVENT_TYPES.LEAVE];
+    const resName = l.resourceName || l.employeeName || l.employee || 'Consultant';
+    const isApproved = l.status === 'Approved';
+    const dotColor = isApproved ? '#10B981' : '#F59E0B';
+    const badgeClass = isApproved ? 'badge-success' : 'badge-warning';
+    const rawTitle = `${resName} — ${l.leaveType || 'Leave'}${!isApproved ? ' (Pending)' : ''}`;
+    const { title, shortTitle } = normalizeTitleAndShort(EVENT_TYPES.LEAVE, rawTitle);
 
-      events.push({
-        id: l.id,
-        type: EVENT_TYPES.LEAVE,
-        typeLabel: cfg.label,
-        typeLabelAr: cfg.labelAr,
-        title,
-        shortTitle,
-        description: `${l.leaveType || 'Leave'} for ${l.employee || 'Consultant'} (${l.domain || 'AMS Services'}). Backup resource: ${l.backupResource || 'Nominated Lead'}. Handover notes: ${l.coverageNotes || 'Full operational handover confirmed.'}`,
-        startDate: l.startDate,
-        endDate: l.endDate,
-        startTime: 'All Day',
-        endTime: 'All Day',
-        allDay: true,
-        status: l.status || 'Approved',
-        priority: 'Medium',
-        owner: l.employee || 'Consultant',
-        relatedResource: l.employee,
-        backupResource: l.backupResource,
-        relatedBusinessDomain: l.domain || 'AMS Operations',
-        sourceModule: cfg.sourceModule,
-        sourceRoute: cfg.sourceRoute,
-        entityType: 'LeaveRecord',
-        cssClass: cfg.cssClass,
-        dotColor: cfg.dotColor,
-        badgeClass: cfg.badgeClass,
-      });
+    events.push({
+      id: l.id,
+      type: EVENT_TYPES.LEAVE,
+      typeLabel: isApproved ? cfg.label : 'Pending Leave',
+      typeLabelAr: isApproved ? cfg.labelAr : 'إجازة قيد الانتظار',
+      title,
+      shortTitle,
+      description: `${l.leaveType || 'Leave'} for ${resName} (${l.businessDomain || l.domain || 'AMS Services'}). Backup resource: ${l.backupResourceName || l.backupResource || 'Nominated Lead'}. Handover notes: ${l.coverageNotes || 'Operational handover confirmed.'}`,
+      startDate: l.startDate,
+      endDate: l.endDate,
+      startTime: 'All Day',
+      endTime: 'All Day',
+      allDay: true,
+      status: l.status || 'Approved',
+      priority: 'Medium',
+      owner: resName,
+      relatedResource: resName,
+      backupResource: l.backupResourceName || l.backupResource || 'None',
+      relatedBusinessDomain: l.businessDomain || l.domain || 'AMS Operations',
+      sourceModule: 'Time Management',
+      sourceRoute: '/resources/time',
+      entityType: 'LeaveRecord',
+      cssClass: cfg.cssClass,
+      dotColor,
+      badgeClass,
+      leaveRecord: l,
     });
-  }
+  });
 
   // 2. COMPLIANCE AUDITS (Source: demoData.js -> audits)
   if (Array.isArray(audits)) {

@@ -22,10 +22,18 @@ import ChartCard from '../../components/common/ChartCard';
 import DataTable from '../../components/common/DataTable';
 import DetailModal from '../../components/common/DetailModal';
 import { RESOURCES, getResourceStats } from '../../data/demoData';
+import { isResourceAvailable, subscribeTimeManagement } from '../../data/timeManagementStore';
 
 export default function ResourceDirectoryPage() {
   const [selectedResource, setSelectedResource] = useState(null);
   const [selectedTrack, setSelectedTrack] = useState('all');
+  const [storeVersion, setStoreVersion] = useState(0);
+
+  useEffect(() => {
+    return subscribeTimeManagement(() => {
+      setStoreVersion(v => v + 1);
+    });
+  }, []);
 
   const stats = getResourceStats();
 
@@ -93,7 +101,37 @@ export default function ResourceDirectoryPage() {
     { key: 'certification', label: 'Certified Credential', width: '180px' },
     { key: 'location', label: 'Location', width: '110px' },
     { key: 'nationality', label: 'Nationality', width: '110px' },
-    { key: 'status', label: 'Status', type: 'status', width: '100px' },
+    {
+      key: 'status',
+      label: 'Availability State',
+      width: '130px',
+      render: (val, item) => {
+        const avail = isResourceAvailable(item.id, '2026-09-08');
+        if (!avail.available && avail.status === 'On Leave') {
+          return (
+            <span
+              className="badge badge-warning"
+              style={{ fontWeight: 600, fontSize: '11px' }}
+              title={`On Leave • Backup: ${avail.backupResource || 'Nominated Specialist'}`}
+            >
+              On Leave
+            </span>
+          );
+        }
+        if (avail.status === 'Remote Work') {
+          return (
+            <span className="badge badge-primary" style={{ fontWeight: 600, fontSize: '11px' }}>
+              Remote
+            </span>
+          );
+        }
+        return (
+          <span className="badge badge-success" style={{ fontWeight: 600, fontSize: '11px' }}>
+            Active
+          </span>
+        );
+      }
+    },
   ];
 
   return (
@@ -197,8 +235,11 @@ export default function ResourceDirectoryPage() {
                   borderColor: 'var(--border-primary)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--text-xs)',
+                  color: 'var(--text-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
               />
               <Legend
                 verticalAlign="bottom"
@@ -241,8 +282,11 @@ export default function ResourceDirectoryPage() {
                   borderColor: 'var(--border-primary)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--text-xs)',
+                  color: 'var(--text-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
               />
               <Legend
                 verticalAlign="bottom"
@@ -275,8 +319,11 @@ export default function ResourceDirectoryPage() {
                   borderColor: 'var(--border-primary)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--text-xs)',
+                  color: 'var(--text-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
               />
               <Bar dataKey="count" name="FTEs" fill="#2563EB" radius={[4, 4, 0, 0]} barSize={24} />
             </BarChart>
@@ -301,8 +348,11 @@ export default function ResourceDirectoryPage() {
                   borderColor: 'var(--border-primary)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--text-xs)',
+                  color: 'var(--text-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
               />
               <Legend verticalAlign="top" align="right" height={28} />
               <Bar dataKey="Plan" fill="#71777C" radius={[4, 4, 0, 0]} name="Contract Plan" barSize={16} />

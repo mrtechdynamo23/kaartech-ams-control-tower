@@ -1,0 +1,248 @@
+/**
+ * EDGE AMS Control Tower — Organization Structure Stylesheet
+ * 
+ * Implements Sections 5, 6, 7, 8, 32, 33, 36, 37, 39 of specifications:
+ * - Premium aerospace/defence control tower aesthetic
+ * - Intelligent use of EDGE orange (#FF5622) for focus, selection, brand highlights
+ * - High-contrast node surfaces, subtle borders, restrained transitions
+ * - Dark mode primary + robust light mode + RTL Arabic support
+ * - True flexbox-centered modals immune to transform/animation offsets
+ */
+
+/* ── Page Layout ── */
+.organization-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: 100%;
+  padding-bottom: 32px;
+}
+
+/* ── Interactive Node Micro-Interactions ── */
+.org-node-interactive {
+  transition: transform 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.18s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.18s ease;
+}
+
+.org-node-interactive:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px -4px rgba(0, 0, 0, 0.45);
+}
+
+[data-theme="light"] .org-node-interactive:hover {
+  box-shadow: 0 8px 20px -4px rgba(0, 0, 0, 0.12);
+}
+
+/* ── Dimmed State for Unrelated Nodes ── */
+.node-dimmed {
+  filter: grayscale(40%);
+  opacity: 0.28 !important;
+  transition: opacity 0.25s ease, filter 0.25s ease;
+}
+
+.node-dimmed:hover {
+  opacity: 0.8 !important;
+  filter: grayscale(0%);
+}
+
+/* ── Hover Cards & Rows ── */
+.hover-card {
+  transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+}
+
+.hover-card:hover {
+  background: var(--bg-hover) !important;
+  border-color: rgba(255, 86, 34, 0.3) !important;
+}
+
+.hover-row:hover {
+  background: var(--bg-hover) !important;
+}
+
+/* ── True Centered Modal Architecture ── */
+.modal-overlay-centered {
+  position: fixed !important;
+  inset: 0 !important;
+  background: rgba(10, 14, 20, 0.72) !important;
+  backdrop-filter: blur(6px) !important;
+  -webkit-backdrop-filter: blur(6px) !important;
+  z-index: 1200 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 24px !important;
+  overflow-y: auto !important;
+}
+
+.modal-dialog-centered {
+  width: 100% !important;
+  max-width: 820px !important;
+  max-height: 88vh !important;
+  background: var(--bg-card) !important;
+  border-radius: var(--radius-xl) !important;
+  border: 1px solid var(--border-primary) !important;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px var(--border-secondary) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  overflow: hidden !important;
+  animation: modalCenterScale 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+  margin: auto !important;
+}
+
+@keyframes modalCenterScale {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ── Canvas Floating Controls ── */
+.canvas-control-btn {
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.canvas-control-btn:hover {
+  background: var(--bg-hover) !important;
+  color: var(--edge-primary) !important;
+}
+
+.canvas-control-btn.active {
+  background: var(--edge-primary) !important;
+  color: #FFFFFF !important;
+}
+
+/* ── Grid Flow Mode for Canvas ── */
+.org-domains-grid-flow {
+  display: grid !important;
+  grid-template-columns: repeat(4, 260px) !important;
+  gap: 20px !important;
+  justify-content: center !important;
+}
+
+@media (max-width: 1400px) {
+  .org-domains-grid-flow {
+    grid-template-columns: repeat(3, 260px) !important;
+  }
+}
+
+@media (max-width: 1080px) {
+  .org-domains-grid-flow {
+    grid-template-columns: repeat(2, 260px) !important;
+  }
+}
+
+/* ── RTL Overrides for Arabic Language ── */
+[dir="rtl"] .organization-page {
+  text-align: right;
+}
+
+[dir="rtl"] .canvas-legend {
+  left: auto;
+  right: 16px;
+}
+
+[dir="rtl"] .canvas-floating-controls {
+  right: auto;
+  left: 20px;
+}
+
+[dir="rtl"] .summary-item {
+  border-right: none !important;
+  border-left: 1px solid var(--border-secondary) !important;
+  padding-right: 0 !important;
+  padding-left: 12px !important;
+}
+
+[dir="rtl"] .summary-item:last-child {
+  border-left: none !important;
+}
+
+/* ── Responsive Behavior ── */
+@media (max-width: 1024px) {
+  .organization-canvas-container {
+    min-height: 520px;
+    height: 600px;
+  }
+  
+  .canvas-legend {
+    display: none;
+  }
+}
+
+@media (max-width: 768px) {
+  .organization-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .organization-toolbar > div {
+    max-width: 100% !important;
+  }
+  
+  .organization-canvas-container {
+    height: 500px;
+  }
+}
+
+/* ── Member Change Count Micro-Badge ── */
+.member-change-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 22px;
+  height: 18px;
+  padding: 0 5px;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: inherit;
+  line-height: 1;
+  text-align: center;
+  white-space: nowrap;
+  border-radius: 999px;
+  background: rgba(255, 86, 34, 0.12);
+  color: var(--edge-primary, #FF5622);
+  border: 1px solid rgba(255, 86, 34, 0.32);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+  outline: none;
+}
+
+.member-change-badge:hover {
+  background: rgba(255, 86, 34, 0.22);
+  border-color: var(--edge-primary, #FF5622);
+  transform: scale(1.06);
+  box-shadow: 0 2px 6px rgba(255, 86, 34, 0.25);
+}
+
+.member-change-badge:focus-visible {
+  outline: 2px solid var(--edge-primary, #FF5622);
+  outline-offset: 1px;
+}
+
+/* Light Mode: High contrast, readable number, crisp border */
+[data-theme="light"] .member-change-badge {
+  background: rgba(235, 94, 40, 0.09);
+  color: #D34010;
+  border: 1px solid rgba(235, 94, 40, 0.38);
+  font-weight: 700;
+}
+
+[data-theme="light"] .member-change-badge:hover {
+  background: rgba(235, 94, 40, 0.18);
+  border-color: #D34010;
+}
+
+/* RTL Support: Naturally aligns via flexbox logical layout */
+[dir="rtl"] .member-change-badge {
+  margin-inline-start: 4px;
+}
+

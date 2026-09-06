@@ -46,13 +46,13 @@ export function getStatusSemantic(status) {
       color: SEMANTIC_COLORS.neutral,
       bg: 'rgba(122, 130, 136, 0.12)',
       border: 'rgba(122, 130, 136, 0.3)',
-      label: 'Unknown',
+      label: 'N/A',
     };
   }
 
   const s = String(status).trim().toLowerCase();
 
-  // 1. Critical / Failure / Breached / Rejected
+  // 1. Critical / Failure / Breached / Rejected / Requires Remediation
   if (
     s === 'breached' ||
     s === 'rejected' ||
@@ -61,7 +61,8 @@ export function getStatusSemantic(status) {
     s === 'non-compliant' ||
     s === 'cancelled' ||
     s === 'escalated' ||
-    s === 'overdue'
+    s === 'overdue' ||
+    s === 'requires remediation'
   ) {
     return {
       category: 'critical',

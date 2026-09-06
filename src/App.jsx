@@ -78,6 +78,9 @@ import MSRReportPage from './pages/reporting/MSRReportPage';
 import SLAPerformancePage from './pages/reporting/SLAPerformancePage';
 import ExecutiveReportPage from './pages/reporting/ExecutiveReportPage';
 
+// ── Customer Corner State ──
+import { CustomerCornerProvider } from './contexts/CustomerCornerContext';
+
 // ── Layout & Global Components ──
 import Sidebar from './components/layout/Sidebar';
 import TopHeader from './components/layout/TopHeader';
@@ -222,6 +225,7 @@ export default function App() {
       <ThemeProvider>
         <LanguageProvider>
           <AuthProvider>
+          <CustomerCornerProvider>
             <Routes>
               {/* ── Public ── */}
               <Route path="/login" element={<LoginPage />} />
@@ -308,6 +312,7 @@ export default function App() {
               <Route path="/" element={<Navigate to="/login" replace />} />
               <Route path="*" element={<Navigate to="/login" replace />} />
             </Routes>
+          </CustomerCornerProvider>
           </AuthProvider>
         </LanguageProvider>
       </ThemeProvider>

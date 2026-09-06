@@ -189,7 +189,11 @@ export default function IncidentsPage() {
                   />
                 ))}
               </Pie>
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '11px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '11px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '4px' }} />
             </PieChart>
           </ResponsiveContainer>
@@ -205,7 +209,11 @@ export default function IncidentsPage() {
             <BarChart data={analytics.monthlyTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <XAxis dataKey="month" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
               <YAxis stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '11px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '11px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '4px' }} />
               <Bar dataKey="Created" fill="#FF5622" radius={[4, 4, 0, 0]} name="Created Inflow" />
               <Bar dataKey="Closed" fill="#0D9F6E" radius={[4, 4, 0, 0]} name="Resolved / Closed" />
@@ -223,7 +231,11 @@ export default function IncidentsPage() {
             <BarChart data={analytics.ageingBuckets} layout="vertical" margin={{ top: 10, right: 20, left: 20, bottom: 0 }}>
               <XAxis type="number" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
               <YAxis dataKey="bucket" type="category" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '11px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '11px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Bar dataKey="count" fill="#2563EB" radius={[0, 4, 4, 0]} name="Active Tickets" />
             </BarChart>
           </ResponsiveContainer>
@@ -247,7 +259,11 @@ export default function IncidentsPage() {
             <AreaChart data={analytics.monthlyTrend} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <XAxis dataKey="month" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
               <YAxis stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '11px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '11px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '4px' }} />
               <Area type="monotone" dataKey="Created" stroke="#FF5622" fill="#FF5622" fillOpacity={0.15} strokeWidth={2} name="Created" />
               <Area type="monotone" dataKey="Closed" stroke="#0D9F6E" fill="#0D9F6E" fillOpacity={0.15} strokeWidth={2} name="Closed" />
@@ -266,7 +282,11 @@ export default function IncidentsPage() {
             <BarChart data={analytics.slaComparison} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
               <XAxis dataKey="metric" stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
               <YAxis domain={[75, 100]} stroke="var(--text-tertiary)" fontSize={11} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '11px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '11px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Legend wrapperStyle={{ fontSize: '11px', paddingTop: '4px' }} />
               <Bar dataKey="Response" fill="#2563EB" radius={[4, 4, 0, 0]} name="Response SLA %" />
               <Bar dataKey="Resolution" fill="#0D9F6E" radius={[4, 4, 0, 0]} name="Resolution SLA %" />

@@ -73,7 +73,11 @@ export default function WSRReportPage() {
             <BarChart data={weeklyData} margin={{ top: 20, right: 20, left: -10, bottom: 0 }}>
               <XAxis dataKey="app" stroke="var(--text-tertiary)" fontSize={12} tickLine={false} />
               <YAxis stroke="var(--text-tertiary)" fontSize={12} tickLine={false} />
-              <Tooltip contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '6px', fontSize: '12px' }} />
+              <Tooltip
+                contentStyle={{ background: 'var(--bg-card)', border: '1px solid var(--border-primary)', borderRadius: '8px', color: 'var(--text-primary)', fontSize: '12px', boxShadow: 'var(--shadow-lg)' }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
+              />
               <Legend wrapperStyle={{ fontSize: '12px', paddingTop: '10px' }} />
               <Bar dataKey="Volume" fill="#D13212" radius={[4, 4, 0, 0]} />
             </BarChart>

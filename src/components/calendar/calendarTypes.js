@@ -75,10 +75,10 @@ export const EVENT_TYPE_CONFIG = {
     labelAr: 'إجازة معتمدة',
     group: 'Resource',
     cssClass: 'cal-type-LEAVE',
-    dotColor: '#64748B', // Neutral Slate
-    badgeClass: 'badge-neutral',
-    sourceModule: 'Resource Management',
-    sourceRoute: '/resources/coverage',
+    dotColor: '#10B981', // Restrained emerald
+    badgeClass: 'badge-success',
+    sourceModule: 'Time Management',
+    sourceRoute: '/resources/time',
   },
   [EVENT_TYPES.AUDIT]: {
     key: EVENT_TYPES.AUDIT,

@@ -229,8 +229,11 @@ export default function EnhancementsPage() {
                   borderColor: 'var(--border-primary)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--text-xs)',
+                  color: 'var(--text-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
               />
               <Legend
                 verticalAlign="bottom"
@@ -263,8 +266,11 @@ export default function EnhancementsPage() {
                   borderColor: 'var(--border-primary)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--text-xs)',
+                  color: 'var(--text-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
               />
               <Bar dataKey="count" name="Enhancements" radius={[4, 4, 0, 0]} barSize={28}>
                 {analytics.pipelineStages.map((entry, idx) => (
@@ -293,8 +299,11 @@ export default function EnhancementsPage() {
                   borderColor: 'var(--border-primary)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--text-xs)',
+                  color: 'var(--text-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
               />
               <Bar dataKey="count" name="Active Packages" radius={[4, 4, 0, 0]} barSize={28}>
                 {analytics.ageingBuckets.map((entry, idx) => (
@@ -333,8 +342,11 @@ export default function EnhancementsPage() {
                   borderColor: 'var(--border-primary)',
                   borderRadius: 'var(--radius-md)',
                   fontSize: 'var(--text-xs)',
+                  color: 'var(--text-primary)',
                   boxShadow: 'var(--shadow-lg)'
                 }}
+                labelStyle={{ color: 'var(--text-primary)', fontWeight: 600 }}
+                itemStyle={{ color: 'var(--text-primary)' }}
               />
               <Legend verticalAlign="top" align="right" height={28} />
               <Area type="monotone" dataKey="Created" stroke="#7C3AED" strokeWidth={2} fillOpacity={1} fill="url(#enhCreatedGrad)" name="Intake CRs" />
