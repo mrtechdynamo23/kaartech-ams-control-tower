@@ -21,11 +21,11 @@ export default function FeedbackPage() {
   const stats = useMemo(() => {
     const total = customerFeedback.length || 1;
     const tiers = [
-      { key: 'Excellent', label: 'Excellent', weight: 5, color: '#10B981', badgeCls: 'badge-success' },
-      { key: 'Very Good', label: 'Very Good', weight: 4, color: '#3B82F6', badgeCls: 'badge-primary' },
+      { key: 'Excellent', label: 'Excellent', weight: 5, color: '#0D9F6E', badgeCls: 'badge-success' },
+      { key: 'Very Good', label: 'Very Good', weight: 4, color: '#2563EB', badgeCls: 'badge-primary' },
       { key: 'Good',      label: 'Good',      weight: 3, color: '#6366F1', badgeCls: 'badge-info' },
-      { key: 'Poor',      label: 'Poor',      weight: 2, color: '#F59E0B', badgeCls: 'badge-warning' },
-      { key: 'Very Poor', label: 'Very Poor', weight: 1, color: '#EF4444', badgeCls: 'badge-error' },
+      { key: 'Average',   label: 'Average',   weight: 2, color: '#D97706', badgeCls: 'badge-warning' },
+      { key: 'Poor',      label: 'Poor',      weight: 1, color: '#DC2626', badgeCls: 'badge-error' },
     ];
 
     const distribution = tiers.map(tier => {
@@ -73,9 +73,9 @@ export default function FeedbackPage() {
       width: '140px',
       render: (val) => {
         let cls = 'badge-success';
-        if (val === 'Very Poor') cls = 'badge-error';
-        else if (val === 'Poor') cls = 'badge-warning';
-        else if (val === 'Good') cls = 'badge-neutral';
+        if (val === 'Poor') cls = 'badge-error';
+        else if (val === 'Average') cls = 'badge-warning';
+        else if (val === 'Good') cls = 'badge-info';
         else if (val === 'Very Good') cls = 'badge-primary';
         return (
           <span className={`badge ${cls}`} style={{ display: 'inline-flex', alignItems: 'center', gap: 4, fontWeight: 700 }}>

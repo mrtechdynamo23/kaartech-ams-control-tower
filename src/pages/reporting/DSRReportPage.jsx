@@ -73,9 +73,7 @@ export default function DSRReportPage() {
             </thead>
             <tbody>
               {[
-                { shift: 'Shift 1 (07:00 – 15:30 GST)', lead: 'Khalid Al Hashimi', in: 24, out: 22, p1: 1, sla: '98.0%' },
-                { shift: 'Shift 2 (15:00 – 23:30 GST)', lead: 'Ravi Shankar', in: 18, out: 19, p1: 0, sla: '95.5%' },
-                { shift: 'Shift 3 (23:00 – 07:30 GST)', lead: 'Priya Nair', in: 6, out: 7, p1: 0, sla: '100%' },
+                { shift: 'General Shift (08:00 – 17:00 GST)', lead: 'Khalid Al Hashimi', in: 48, out: 48, p1: 1, sla: '98.5%' },
               ].map(s => (
                 <tr key={s.shift} style={{ borderBottom: '1px solid var(--border-secondary)' }}>
                   <td style={{ padding: '12px 16px', fontWeight: 600, color: 'var(--text-primary)' }}>{s.shift}</td>

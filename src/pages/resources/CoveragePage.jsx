@@ -23,9 +23,7 @@ export default function CoveragePage() {
   }, [storeVersion]);
 
   const shifts = [
-    { name: 'Shift 1: Morning Triage (UAE Core)', time: '07:00 – 15:30 GST', commander: 'Khalid Al Hashimi', staff: `${coverageCompliance.filled} Specialists Active Onsite`, status: 'Active (Current)' },
-    { name: 'Shift 2: Evening Operations & EMEA', time: '15:00 – 23:30 GST', commander: 'Ravi Shankar', staff: '10 Consultants (Onsite + Offshore)', status: 'Upcoming' },
-    { name: 'Shift 3: Night Watch & Global On-Call', time: '23:00 – 07:30 GST', commander: 'Priya Nair', staff: '8 Specialists On-Call P1/P2', status: 'Standby' },
+    { name: 'General Shift: Operational Delivery (UAE Core)', time: '08:00 – 17:00 GST', commander: 'Khalid Al Hashimi', staff: `${coverageCompliance.filled} Specialists Active Onsite`, status: 'Active (Current)' },
   ];
 
   return (
@@ -34,7 +32,7 @@ export default function CoveragePage() {
       <div className="page-header" style={{ marginBottom: 0 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <h1 className="page-title">Shift Coverage & Calendar Operations</h1>
+            <h1 className="page-title">General Shift Coverage & Calendar Operations</h1>
             <span className="badge badge-primary">24/7/365 Mission Ready</span>
             <span className="badge badge-neutral">Live Time Management Linked</span>
           </div>
@@ -53,8 +51,8 @@ export default function CoveragePage() {
         />
         <KPICard
           title="Current Active Shift"
-          value="Shift 1"
-          subtitle="Morning Core (07:00-15:30)"
+          value="General Shift"
+          subtitle="UAE Core (08:00 – 17:00 GST)"
           icon={Clock}
           status="success"
         />

@@ -22,12 +22,6 @@ const navItems = [
     labelKey: 'executiveBoard.title',
   },
   {
-    key: 'global-calendar',
-    path: '/calendar',
-    icon: Calendar,
-    labelKey: 'calendar.title',
-  },
-  {
     key: 'command-center',
     path: '/command-center',
     icon: Layout,
@@ -38,6 +32,18 @@ const navItems = [
       { key: 'cc-service-requests', path: '/command-center/service-requests', labelKey: 'commandCenter.serviceRequests' },
       { key: 'cc-enhancements', path: '/command-center/enhancements', labelKey: 'commandCenter.enhancements' },
       { key: 'cc-problems', path: '/command-center/problems', labelKey: 'commandCenter.problems' },
+    ],
+  },
+  {
+    key: 'customer',
+    path: '/customer',
+    icon: HeadphonesIcon,
+    labelKey: 'customerConnect.title',
+    children: [
+      { key: 'cust-corner', path: '/customer/corner', labelKey: 'customerConnect.corner' },
+      { key: 'cust-feedback', path: '/customer/feedback', labelKey: 'customerConnect.feedback' },
+      { key: 'cust-actions', path: '/customer/actions', labelKey: 'customerConnect.actions' },
+      { key: 'cust-issues', path: '/customer/issues', labelKey: 'customerConnect.issues' },
     ],
   },
   {
@@ -65,7 +71,6 @@ const navItems = [
       { key: 'res-time', path: '/resources/time', labelKey: 'resource.time' },
       { key: 'res-contact', path: '/resources/contact', labelKey: 'resource.contact' },
       { key: 'res-skills', path: '/resources/skills', labelKey: 'resource.skills' },
-      { key: 'res-coverage', path: '/resources/coverage', labelKey: 'resource.coverage' },
     ],
   },
   {
@@ -80,18 +85,6 @@ const navItems = [
       { key: 'tech-deps', path: '/technology/dependencies', labelKey: 'technology.dependencies' },
       { key: 'tech-licenses', path: '/technology/licenses', labelKey: 'technology.licenses' },
       { key: 'tech-releases', path: '/technology/releases', labelKey: 'technology.releases' },
-    ],
-  },
-  {
-    key: 'customer',
-    path: '/customer',
-    icon: HeadphonesIcon,
-    labelKey: 'customerConnect.title',
-    children: [
-      { key: 'cust-corner', path: '/customer/corner', labelKey: 'customerConnect.corner' },
-      { key: 'cust-feedback', path: '/customer/feedback', labelKey: 'customerConnect.feedback' },
-      { key: 'cust-actions', path: '/customer/actions', labelKey: 'customerConnect.actions' },
-      { key: 'cust-issues', path: '/customer/issues', labelKey: 'customerConnect.issues' },
     ],
   },
   {

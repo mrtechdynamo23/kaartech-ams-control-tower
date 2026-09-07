@@ -67,7 +67,7 @@ const INITIAL_LEAVE_RECORDS = [
     status: 'Approved',
     submittedDate: '2026-08-28',
     approvedDate: '2026-08-29',
-    coverageNotes: 'E2M plant floor ticket queue delegated to Hassan Al Nuaimi. Primary escalation to Shift 3.',
+    coverageNotes: 'E2M plant floor ticket queue delegated to Hassan Al Nuaimi. Primary escalation to General Shift.',
     workflow: [
       { step: 'Submitted', date: '2026-08-28', by: 'Priya Nair', status: 'Completed' },
       { step: 'Pending Approval', date: '2026-08-28', by: 'Fatima Al Zaabi', status: 'Completed' },

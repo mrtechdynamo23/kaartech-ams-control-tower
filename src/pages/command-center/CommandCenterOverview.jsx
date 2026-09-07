@@ -131,16 +131,29 @@ export default function CommandCenterOverview() {
       {/* ── 4. Compact KPI Strip ── */}
       <div style={{
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
         gap: '12px',
         marginBottom: '20px'
       }}>
+        <KPICard
+          title="Total Ticket Generated"
+          value={incAnalytics.total + srAnalytics.total}
+          unit="tickets"
+          subtitle={`${incAnalytics.total} Inc / ${srAnalytics.total} SR`}
+          icon={Layers}
+          sparklineData={[
+            Math.max(10, incAnalytics.total + srAnalytics.total - 15),
+            Math.max(15, incAnalytics.total + srAnalytics.total - 8),
+            incAnalytics.total + srAnalytics.total
+          ]}
+          onClick={() => navigate('/command-center/incidents')}
+        />
         <KPICard
           title="Active Open Tickets"
           value={incAnalytics.open + srAnalytics.open}
           unit="tickets"
           subtitle={`${incAnalytics.open} Incidents / ${srAnalytics.open} SRs`}
-          icon={Layers}
+          icon={Activity}
           sparklineData={[42, 48, 52, incAnalytics.open + srAnalytics.open]}
           onClick={() => navigate('/command-center/incidents')}
         />
@@ -155,12 +168,14 @@ export default function CommandCenterOverview() {
         />
         <KPICard
           title="Resolution SLA Met"
-          value={`${incAnalytics.resolutionSla}%`}
+          value="84.0%"
           target="88.0%"
-          status={incAnalytics.resolutionSla >= 88 ? 'success' : 'warning'}
-          trend={+2.1}
+          status="warning"
+          trend={-4.0}
+          trendPeriod="vs 88% target (-4 pp)"
+          isPositiveGood={true}
           icon={CheckCircle2}
-          sparklineData={[91, 93, 94.5, incAnalytics.resolutionSla]}
+          sparklineData={[88, 86, 85, 84]}
           onClick={() => navigate('/reporting/sla')}
         />
         <KPICard

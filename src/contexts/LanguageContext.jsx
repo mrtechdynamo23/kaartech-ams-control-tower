@@ -132,7 +132,7 @@ const translations = {
     },
     resource: {
       title: 'Resource & Capability',
-      directory: 'Resource Directory',
+      directory: 'Resource',
       organization: 'Organization Structure',
       time: 'Time Management',
       contact: 'Contact',
@@ -309,7 +309,7 @@ const translations = {
     },
     resource: {
       title: 'الموارد والقدرات',
-      directory: 'دليل الموارد',
+      directory: 'الموارد',
       organization: 'الهيكل التنظيمي',
       time: 'إدارة الوقت',
       contact: 'جهات الاتصال',

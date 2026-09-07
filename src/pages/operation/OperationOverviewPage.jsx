@@ -2,11 +2,14 @@
  * EDGE AMS Control Tower — Service Operation Overview
  * Route: /service-operation/overview
  */
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Activity, Clock, CheckCircle2, BookOpen, ShieldCheck, Zap } from 'lucide-react';
 import KPICard from '../../components/common/KPICard';
+import { getServiceOperationMetrics } from '../../data/analyticsSelectors';
 
 export default function OperationOverviewPage() {
+  const opMetrics = useMemo(() => getServiceOperationMetrics(), []);
+
   return (
     <div className="operation-overview-page animate-fade-in">
       {/* Header */}
@@ -21,7 +24,17 @@ export default function OperationOverviewPage() {
       </div>
 
       {/* KPI Tiles */}
-      <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+      <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+        <KPICard
+          title="MTBF (Mean Time Between Failures)"
+          value={opMetrics.mtbfHours}
+          target={opMetrics.mtbfTarget}
+          status="success"
+          trend={+4.8}
+          subtitle="26 Core Systems Monitored"
+          icon={Activity}
+          sparklineData={[1280, 1310, 1325, opMetrics.mtbfRaw]}
+        />
         <KPICard
           title="First Contact Resolution"
           value="74.2%"

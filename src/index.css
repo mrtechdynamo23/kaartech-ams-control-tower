@@ -160,6 +160,7 @@
 }
 
 /* ═══ LIGHT THEME (Primary Experience per Head Feedback) ═══ */
+:root,
 [data-theme="light"] {
   --bg-primary: #FFFFFF;
   --bg-secondary: #F8FAFC;

@@ -62,10 +62,9 @@ const priorities = ['P1', 'P2', 'P3', 'P4'];
 
 function generateIncidents() {
   const incidents = [];
-  const baseDate = new Date('2026-06-01');
 
-  for (let i = 1; i <= 75; i++) {
-    const priority = i <= 3 ? 'P1' : i <= 10 ? 'P2' : i <= 35 ? 'P3' : 'P4';
+  for (let i = 1; i <= 90; i++) {
+    const priority = (i % 18 === 1) ? 'P1' : (i % 8 === 2 || i % 8 === 5) ? 'P2' : (i % 2 === 0) ? 'P3' : 'P4';
     const statusIdx = i <= 15 ? Math.floor(Math.random() * 3) : Math.floor(Math.random() * 5);
     const status = incidentStatuses[statusIdx];
     const resource = RESOURCES[i % RESOURCES.length];
@@ -73,14 +72,16 @@ function generateIncidents() {
     const entity = ENTITIES[i % ENTITIES.length];
     const app = APPLICATIONS[i % 26];
     const domain = BUSINESS_DOMAINS[i % BUSINESS_DOMAINS.length];
-    const daysAgo = Math.floor(Math.random() * 120);
-    const created = new Date(baseDate);
-    created.setDate(created.getDate() + Math.floor(Math.random() * 90));
+    
+    // Spread evenly across months 0 (Jan) through 8 (Sep) of 2026
+    const monthIdx = (i - 1) % 9;
+    const day = 1 + ((i * 3) % 27);
+    const created = new Date(2026, monthIdx, day, 8 + (i % 9), (i * 7) % 60);
 
-    const responseSlaStatus = Math.random() > 0.15 ? 'Met' : 'Breached';
+    const responseSlaStatus = Math.random() > 0.08 ? 'Met' : 'Breached';
     const resolutionSlaStatus = status === 'Closed' || status === 'Resolved'
-      ? (Math.random() > 0.12 ? 'Met' : 'Breached')
-      : (Math.random() > 0.2 ? 'On Track' : 'At Risk');
+      ? ((priority === 'P1' && i === 19) ? 'Breached' : Math.random() > 0.06 ? 'Met' : 'Breached')
+      : (Math.random() > 0.15 ? 'On Track' : 'At Risk');
 
     incidents.push({
       id: `INC-${String(i).padStart(5, '0')}`,
@@ -146,8 +147,9 @@ function generateServiceRequests() {
     const resource = RESOURCES[i % RESOURCES.length];
     const resolver = RESOURCES[(i + 3) % RESOURCES.length];
     const domain = BUSINESS_DOMAINS[i % BUSINESS_DOMAINS.length];
-    const created = new Date('2026-06-15');
-    created.setDate(created.getDate() + Math.floor(Math.random() * 75));
+    const monthIdx = (i - 1) % 9;
+    const day = 1 + ((i * 4) % 27);
+    const created = new Date(2026, monthIdx, day, 9 + (i % 8), (i * 11) % 60);
 
     srs.push({
       id: `SR-${String(i).padStart(5, '0')}`,
@@ -204,8 +206,9 @@ function generateEnhancements() {
     const category = hours <= 80 ? 'Minor' : 'Major';
     const resource = RESOURCES[i % RESOURCES.length];
     const domain = BUSINESS_DOMAINS[i % BUSINESS_DOMAINS.length];
-    const created = new Date('2026-05-01');
-    created.setDate(created.getDate() + Math.floor(Math.random() * 120));
+    const monthIdx = (i - 1) % 9;
+    const day = 1 + ((i * 5) % 27);
+    const created = new Date(2026, monthIdx, day, 11 + (i % 6), (i * 13) % 60);
 
     enhancements.push({
       id: `ENH-${String(i).padStart(5, '0')}`,
@@ -1707,22 +1710,21 @@ function getKBArticleTitle(i, domainLabel) {
 function generateCustomerFeedback() {
   const feedback = [];
   const ratingsConfig = [
-    { rating: 'Excellent', weight: 0.70, comment: 'Exceptional response speed and technical depth from AMS lead. Zero business impact on operations.' },
-    { rating: 'Very Good', weight: 0.18, comment: 'Issue resolved effectively within standard target. Proactive communication throughout.' },
-    { rating: 'Good',      weight: 0.08, comment: 'Service restored within SLA. Prompt acknowledgement appreciated during peak transaction hours.' },
-    { rating: 'Poor',      weight: 0.03, comment: 'Resolution took longer than expected. Escalation required multiple cross-domain handoffs.' },
-    { rating: 'Very Poor', weight: 0.01, comment: 'Resolution delayed past SLA window. Detailed Root Cause Analysis requested for SteerCom.' },
+    { rating: 'Excellent', comment: 'Exceptional response speed and technical depth from AMS lead. Zero business impact on operations.' },
+    { rating: 'Very Good', comment: 'Issue resolved effectively within standard target. Proactive communication throughout.' },
+    { rating: 'Good',      comment: 'Service restored within SLA. Prompt acknowledgement appreciated during peak transaction hours.' },
+    { rating: 'Average',   comment: 'Resolution completed within SLA, but required multiple cross-team handoffs.' },
+    { rating: 'Poor',      comment: 'Resolution delayed past standard target. Root cause review requested for SteerCom.' },
   ];
 
-  // 40 realistic verified surveys with executive CSAT distribution
-  for (let i = 1; i <= 40; i++) {
-    // Deterministic distribution: 28 Excellent (70%), 7 Very Good (17.5%), 3 Good (7.5%), 1 Poor (2.5%), 1 Very Poor (2.5%)
+  // 50 verified surveys reflecting agreed CSAT distribution: 41 Excellent (82%), 5 Very Good (10%), 2 Good (4%), 1 Average (2%), 1 Poor (2%)
+  for (let i = 1; i <= 50; i++) {
     let selected;
-    if (i <= 28) selected = ratingsConfig[0];
-    else if (i <= 35) selected = ratingsConfig[1];
-    else if (i <= 38) selected = ratingsConfig[2];
-    else if (i === 39) selected = ratingsConfig[3];
-    else selected = ratingsConfig[4];
+    if (i <= 41) selected = ratingsConfig[0];       // 82% Excellent
+    else if (i <= 46) selected = ratingsConfig[1];  // 10% Very Good
+    else if (i <= 48) selected = ratingsConfig[2];  // 4% Good
+    else if (i === 49) selected = ratingsConfig[3]; // 2% Average
+    else selected = ratingsConfig[4];               // 2% Poor (<5%)
 
     feedback.push({
       id: `CSAT-${String(i).padStart(4, '0')}`,
@@ -1730,7 +1732,7 @@ function generateCustomerFeedback() {
       rating: selected.rating,
       comment: selected.comment,
       respondent: RESOURCES[(i * 3) % RESOURCES.length].name,
-      date: new Date(2026, 6 + (i % 2), 1 + (i % 28)).toISOString().split('T')[0],
+      date: new Date(2026, (i - 1) % 9, 1 + ((i * 3) % 27)).toISOString().split('T')[0],
       entity: ENTITIES[i % ENTITIES.length].name,
       classification: 'DEMO',
     });
@@ -1796,7 +1798,7 @@ export function generateNotifications(incidents, risks, ctas) {
 // ═══════════════════════════════════════════════════
 function generateLeaveRecords() {
   return [
-    { id: 'LV-001', employeeId: 'RES-001', employeeName: 'Khalid Al Hashimi', leaveType: 'Annual Leave', startDate: '2026-06-18', endDate: '2026-06-25', status: 'Approved', backupResourceId: 'RES-002', backupResourceName: 'Fatima Al Zaabi', coverageNotes: 'Primary queue coverage assigned to Fatima Al Zaabi. On-call escalation routed to Shift 2 lead.' },
+    { id: 'LV-001', employeeId: 'RES-001', employeeName: 'Khalid Al Hashimi', leaveType: 'Annual Leave', startDate: '2026-06-18', endDate: '2026-06-25', status: 'Approved', backupResourceId: 'RES-002', backupResourceName: 'Fatima Al Zaabi', coverageNotes: 'Primary queue coverage assigned to Fatima Al Zaabi. On-call escalation routed to General Shift lead.' },
     { id: 'LV-002', employeeId: 'RES-003', employeeName: 'Ravi Shankar', leaveType: 'Technical Training', startDate: '2026-07-06', endDate: '2026-07-10', status: 'Approved', backupResourceId: 'RES-021', backupResourceName: 'Abdulrahman Darwish', coverageNotes: 'Attending SAP S/4HANA Sourcing certification boot-camp.' },
     { id: 'LV-003', employeeId: 'RES-005', employeeName: 'Priya Nair', leaveType: 'Annual Leave', startDate: '2026-07-15', endDate: '2026-07-24', status: 'Approved', backupResourceId: 'RES-013', backupResourceName: 'Hassan Al Nuaimi', coverageNotes: 'E2M manufacturing plant tickets delegated to Hassan Al Nuaimi.' },
     { id: 'LV-004', employeeId: 'RES-008', employeeName: 'Noura Al Shamsi', leaveType: 'Certification Exam', startDate: '2026-08-03', endDate: '2026-08-05', status: 'Approved', backupResourceId: 'RES-010', backupResourceName: 'Aisha Khalfan', coverageNotes: 'Ariba Guided Sourcing specialist exam leave.' },
@@ -1984,7 +1986,7 @@ function generateMOMRecords() {
       summary: 'August operations sign-off. Reviewed capacity forecast for Q3 closeout and S/4HANA 2025 upgrade pre-validation checklist.',
       keyDecisions: [
         'Approved freeze window for Q3 financial closing (Sep 29–30).',
-        'Authorized launch of AI Incident Co-Pilot pilot with Shift 1 engineers.'
+        'Authorized launch of AI Incident Co-Pilot pilot with General Shift engineers.'
       ],
       actionItems: [
         { actionId: 'ACT-009', actionDescription: 'Finalize ABAP test cockpit scans for S/4HANA upgrade pre-validation', owner: 'Sunita Reddy', targetDate: '2026-09-07', status: 'In Progress', priority: 'High', ctaId: 'CTA-009', isOverdue: false },

@@ -219,6 +219,24 @@ export const TEAM_MEMBER_CHANGE_COUNTS = {
   'R2R::Financial Accounting': 1,
 };
 
+export const RESOURCE_MEMBER_CHANGE_COUNTS = {
+  'RES-005': 3, // Priya Nair (E2M Production Planning - 3 member changes)
+  'RES-013': 2, // Hassan Al Nuaimi (E2M Production Planning)
+  'RES-020': 1, // Suresh Krishnan (E2M)
+  'RES-009': 2, // Ankit Patel (E2M Quality Management)
+  'RES-027': 2, // Sultan Al Dhahiri (E2M Quality Management)
+  'RES-008': 1, // Noura Al Shamsi (S2P Strategic Sourcing)
+  'RES-026': 2, // Nisha Varma (S2P Strategic Sourcing)
+  'RES-010': 1, // Aisha Khalfan (S2P Vendor Management)
+  'RES-014': 1, // Sunita Reddy (P2P Invoice Processing)
+  'RES-002': 1, // Fatima Al Zaabi (R2R Financial Accounting)
+};
+
+export function getMemberChangeCountForResource(resourceId) {
+  const cleanId = String(resourceId || '').replace(/^res-/, '');
+  return RESOURCE_MEMBER_CHANGE_COUNTS[cleanId] || 0;
+}
+
 export function getMemberChangeCountForTeam(domainKey, processGroupName) {
   const key = `${domainKey}::${processGroupName}`;
   return TEAM_MEMBER_CHANGE_COUNTS[key] || 0;
@@ -284,6 +302,7 @@ export function buildOrganizationTree() {
           id: `res-${m.id}`,
           rawId: m.id,
           type: 'resource',
+          memberChangeCount: getMemberChangeCountForResource(m.id),
           data: m,
         })),
       };

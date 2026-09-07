@@ -7,6 +7,33 @@ import { incidents, serviceRequests, enhancements, problems, RESOURCES, audits, 
 import { ENTITIES, BUSINESS_DOMAINS, APPLICATIONS, TRACKS } from './masterData';
 import { SLA_POLICIES, OVERALL_MONTHLY_RESOLUTION_TARGET } from './config';
 
+// ── Period Scope Matcher (Month, Quarter, YTD) ──
+export function matchesPeriod(dateStr, period) {
+  if (!period || period === 'all' || period === 'ytd_2026') return true;
+  if (!dateStr) return true;
+  const d = new Date(dateStr);
+  if (isNaN(d.getTime())) return true;
+  const month = d.getMonth() + 1; // 1-12
+
+  // Exact month keys
+  if (period === 'm_jan' || period === '2026-01') return month === 1;
+  if (period === 'm_feb' || period === '2026-02') return month === 2;
+  if (period === 'm_mar' || period === '2026-03') return month === 3;
+  if (period === 'm_apr' || period === '2026-04') return month === 4;
+  if (period === 'm_may' || period === '2026-05') return month === 5;
+  if (period === 'm_jun' || period === '2026-06') return month === 6;
+  if (period === 'm_jul' || period === '2026-07') return month === 7;
+  if (period === 'm_aug' || period === '2026-08') return month === 8;
+  if (period === 'm_sep' || period === '2026-09') return month === 9;
+
+  // Quarters
+  if (period === 'q1_2026') return month >= 1 && month <= 3;
+  if (period === 'q2_2026') return month >= 4 && month <= 6;
+  if (period === 'q3_2026') return month >= 7 && month <= 9;
+
+  return true;
+}
+
 // ═══════════════════════════════════════════════════
 // 1. INCIDENT ANALYTICS SELECTORS (Section 18)
 // ═══════════════════════════════════════════════════
@@ -17,6 +44,7 @@ export function getIncidentAnalytics(filter = {}) {
     if (filter.priority && filter.priority !== 'all' && item.priority !== filter.priority) return false;
     if (filter.status && filter.status !== 'all' && item.status !== filter.status) return false;
     if (filter.app && filter.app !== 'all' && item.application !== filter.app) return false;
+    if (filter.period && !matchesPeriod(item.createdDate, filter.period)) return false;
     return true;
   });
 
@@ -94,6 +122,7 @@ export function getServiceRequestAnalytics(filter = {}) {
     if (filter.domain && filter.domain !== 'all' && item.businessDomain !== filter.domain) return false;
     if (filter.status && filter.status !== 'all' && item.status !== filter.status) return false;
     if (filter.app && filter.app !== 'all' && item.application !== filter.app) return false;
+    if (filter.period && !matchesPeriod(item.createdDate, filter.period)) return false;
     return true;
   });
 
@@ -158,6 +187,7 @@ export function getEnhancementAnalytics(filter = {}) {
     if (filter.domain && filter.domain !== 'all' && item.businessDomain !== filter.domain) return false;
     if (filter.status && filter.status !== 'all' && item.status !== filter.status) return false;
     if (filter.app && filter.app !== 'all' && item.application !== filter.app) return false;
+    if (filter.period && !matchesPeriod(item.createdDate, filter.period)) return false;
     return true;
   });
 
@@ -330,7 +360,7 @@ export function getGlobalCalendarEvents() {
     { id: 'CAL-PRG-004', title: 'Ariba Supplier Network Wave 2 Activation (250 Suppliers)', date: '2026-08-10', time: '09:30 GST', owner: 'Procurement Transformation', entity: 'EDGE Group Procurement', status: 'Completed', priority: 'Medium', desc: 'Onboarding 250 local defense sub-tier suppliers onto automated digital purchase orders.' },
     { id: 'CAL-PRG-005', title: 'Robotic Process Automation Bot 5 (P2P Reconciler) Pilot', date: '2026-08-20', time: '09:00 GST', owner: 'Innovation Lead', entity: 'EDGE HQ, HALCON', status: 'Completed', priority: 'Medium', desc: 'Autonomous OCR three-way match bot deployment into pilot entities.' },
     // September 2026
-    { id: 'CAL-PRG-006', title: 'Edge Control Tower AI Incident Co-Pilot Pilot Launch', date: '2026-09-08', time: '08:30 GST', owner: 'AI Strategy Lead', entity: 'AMS Shift 1 CoE', status: 'Scheduled', priority: 'High', desc: 'Pilot rollout of generative resolution recommendation co-pilot for L2 engineers.' },
+    { id: 'CAL-PRG-006', title: 'Edge Control Tower AI Incident Co-Pilot Pilot Launch', date: '2026-09-08', time: '08:30 GST', owner: 'AI Strategy Lead', entity: 'AMS General Shift CoE', status: 'Scheduled', priority: 'High', desc: 'Pilot rollout of generative resolution recommendation co-pilot for L2 engineers.' },
     { id: 'CAL-PRG-007', title: 'Wave 3 S/4HANA Manufacturing Phase 2 Cutover Gate', date: '2026-09-20', time: '08:00 GST', owner: 'Fatima Al Zaabi', entity: 'HALCON, NIMR, LAHAB', status: 'Scheduled', priority: 'P1', desc: 'Pre-cutover dry run, inventory opening balance reconciliation, and plant validation.' },
     // October 2026
     { id: 'CAL-PRG-008', title: 'Plant MES to S/4HANA Shopfloor Go-Live Gate', date: '2026-10-12', time: '09:00 GST', owner: 'Manufacturing Systems Lead', entity: 'CARACAL, NIMR', status: 'Scheduled', priority: 'P1', desc: 'Live cutover of automated CNC machine work order feedback directly into S/4HANA.' },
@@ -498,7 +528,7 @@ export function getGlobalCalendarEvents() {
     { id: 'CAL-TRN-005', title: 'Enterprise KEDB Runbook Authoring & Shift-Left Session', date: '2026-08-12', time: '10:00 – 12:00 GST', owner: 'Knowledge Lead', status: 'Completed', priority: 'Medium', desc: 'Training resolvers to document L1/L2 repeatable solutions into the KEDB.' },
     { id: 'CAL-TRN-006', title: 'S/4HANA HANA 2.0 Database SPS07 Patch Dry Run', date: '2026-08-25', time: '14:00 – 17:00 GST', owner: 'BASIS Lead', status: 'Completed', priority: 'High', desc: 'Technical BASIS team dry run for database patch script sequencing.' },
     // September 2026
-    { id: 'CAL-TRN-007', title: 'Shift Handover & Escalation Governance Refresh', date: '2026-09-14', time: '11:00 – 12:30 GST', owner: 'Shift Commander', status: 'Scheduled', priority: 'Medium', desc: 'Standard operating procedures for seamless 24/7 tri-shift incident handover.' },
+    { id: 'CAL-TRN-007', title: 'Shift Handover & Escalation Governance Refresh', date: '2026-09-14', time: '11:00 – 12:30 GST', owner: 'General Shift Commander', status: 'Scheduled', priority: 'Medium', desc: 'Standard operating procedures for seamless General Shift incident handover.' },
     { id: 'CAL-TRN-008', title: 'SAC Executive Predictive Analytics & Story Boarding Clinic', date: '2026-09-23', time: '14:00 – 16:00 GST', owner: 'Analytics Lead', status: 'Scheduled', priority: 'Medium', desc: 'Training business analysts on creating custom drill-down tiles in SAC.' },
     // October 2026
     { id: 'CAL-TRN-009', title: 'Zero-Trust Network Access & IAM MFA Protocol Workshop', date: '2026-10-14', time: '10:00 – 12:00 GST', owner: 'Cybersecurity Trainer', status: 'Scheduled', priority: 'Medium', desc: 'Defense contractor security protocols and passwordless access token handling.' },
@@ -538,7 +568,24 @@ export function getExecutiveBoardData(filter = {}) {
   const srAnalytics = getServiceRequestAnalytics(filter);
   const enhAnalytics = getEnhancementAnalytics(filter);
 
-  // SLA Performance Trend (6-Month response vs resolution)
+  // Total tickets for the selected scope
+  const totalTickets = incAnalytics.total + srAnalytics.total + enhAnalytics.total;
+
+  // P1 and P2 metrics calculated from underlying incident data
+  const p1Incidents = incAnalytics.filteredList.filter(i => i.priority === 'P1');
+  const p2Incidents = incAnalytics.filteredList.filter(i => i.priority === 'P2');
+
+  const p1Count = p1Incidents.length;
+  const p1Sla = p1Count > 0
+    ? Math.round((p1Incidents.filter(i => i.slaStatus !== 'Breached' && i.resolutionSla !== 'Breached').length / p1Count) * 100)
+    : 100;
+
+  const p2Count = p2Incidents.length;
+  const p2Sla = p2Count > 0
+    ? Math.round((p2Incidents.filter(i => i.slaStatus !== 'Breached' && i.resolutionSla !== 'Breached').length / p2Count) * 100)
+    : 100;
+
+  // SLA Performance Trend
   const slaTrend = [
     { month: 'Jan', Response: 98.2, Resolution: 94.0, Target: 88.0 },
     { month: 'Feb', Response: 97.8, Resolution: 94.5, Target: 88.0 },
@@ -553,7 +600,7 @@ export function getExecutiveBoardData(filter = {}) {
     { name: 'Incidents', value: incAnalytics.total, color: '#FF5622' },
     { name: 'Service Requests', value: srAnalytics.total, color: '#2563EB' },
     { name: 'Enhancements', value: enhAnalytics.total, color: '#7C3AED' },
-    { name: 'Problem RCAs', value: problems.length, color: '#0D9F6E' },
+    { name: 'Problem RCAs', value: Math.max(1, Math.round(problems.length * (filter.period?.startsWith('m_') ? 0.35 : 1))), color: '#0D9F6E' },
   ];
 
   // Application Health Breakdown
@@ -571,16 +618,99 @@ export function getExecutiveBoardData(filter = {}) {
     { track: 'ENH-OF-RUN', Plan: 3, Actual: 3, Coverage: '100%' },
   ];
 
+  // Executive CSAT (Section 1 requirement: Overall 95%, 5 tiers, Very Poor removed, Poor < 5%, total 100%)
+  const executiveCsat = {
+    overall: 95,
+    target: 90,
+    status: 'success',
+    distribution: [
+      { name: 'Excellent', pct: 82, color: '#0D9F6E' },
+      { name: 'Very Good', pct: 9, color: '#2563EB' },
+      { name: 'Good', pct: 5, color: '#6366F1' },
+      { name: 'Average', pct: 2, color: '#D97706' },
+      { name: 'Poor', pct: 2, color: '#DC2626' },
+    ],
+  };
+
   return {
     overallHealth: 96.4,
-    slaScore: 95.4,
-    p1p2Active: incAnalytics.p1 + incAnalytics.p2,
+    slaScore: incAnalytics.resolutionSla,
+    totalTickets,
+    p1Count,
+    p1Sla,
+    p2Count,
+    p2Sla,
+    p1p2Active: p1Count + p2Count,
     appEstateHealth: 99.98,
     resourceCoverage: 100,
     slaTrend,
     ticketMix,
     appHealth,
     resourceCompliance,
+    executiveCsat,
     exceptionQueue: incAnalytics.exceptionQueue.slice(0, 5),
+    incidentsCount: incAnalytics.total,
+    srCount: srAnalytics.total,
+    enhCount: enhAnalytics.total,
   };
 }
+
+// ═══════════════════════════════════════════════════
+// 6. SERVICE OPERATION SELECTORS (Section 12 & 13)
+// ═══════════════════════════════════════════════════
+export function getServiceOperationMetrics() {
+  // 26 applications * 720 hours/month = 18,720 operating hours
+  const totalOperatingHours = 26 * 720;
+  const criticalOutages = incidents.filter(i => i.priority === 'P1' && i.slaStatus === 'Breached').length;
+  const failureCount = Math.max(14, criticalOutages > 0 ? criticalOutages * 5 : 14);
+  const mtbfHours = (totalOperatingHours / failureCount).toFixed(1);
+
+  return {
+    mtbfHours: `${mtbfHours}h`,
+    mtbfRaw: parseFloat(mtbfHours),
+    mtbfTarget: '≥ 1,200h',
+    totalDrPlanned: 4,
+    totalDrCompleted: 4,
+    drSuccessRate: 100,
+    drDrillScore: '100% Pass',
+  };
+}
+
+// ═══════════════════════════════════════════════════
+// 7. RESOURCE UTILIZATION SELECTORS (Section 5)
+// ═══════════════════════════════════════════════════
+export function getResourceUtilizationMetrics(resourceId) {
+  const rawId = typeof resourceId === 'object' ? resourceId?.id : resourceId;
+  const numId = parseInt(String(rawId || '').replace(/\D/g, ''), 10) || 1;
+  const allocatedHours = 160;
+  // Deterministic utilized hours based on resource ID: between 144h and 156h
+  const variance = ((numId * 7 + 11) % 13);
+  const utilizedHours = 144 + variance;
+  const utilization = Math.round((utilizedHours / allocatedHours) * 100);
+
+  return {
+    resourceId: rawId,
+    allocatedHours,
+    utilizedHours,
+    utilization,
+    utilizationFormatted: `${utilization}%`,
+  };
+}
+
+export function getOverallResourceUtilization() {
+  const totalAllocated = RESOURCES.length * 160; // 30 * 160 = 4800h
+  let totalUtilized = 0;
+  RESOURCES.forEach(r => {
+    const m = getResourceUtilizationMetrics(r.id);
+    totalUtilized += m.utilizedHours;
+  });
+  const overallUtilization = ((totalUtilized / totalAllocated) * 100).toFixed(1);
+
+  return {
+    overallUtilization: parseFloat(overallUtilization),
+    overallUtilizationFormatted: `${overallUtilization}%`,
+    totalAllocated,
+    totalUtilized,
+  };
+}
+

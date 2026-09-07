@@ -3,10 +3,13 @@
  * Route: /service-operation/continuity
  */
 import React from 'react';
-import { ShieldCheck, Server, RefreshCw, CheckCircle2, Clock, HardDrive } from 'lucide-react';
+import { ShieldCheck, Server, RefreshCw, CheckCircle2, Clock, HardDrive, CalendarCheck } from 'lucide-react';
 import KPICard from '../../components/common/KPICard';
+import { getServiceOperationMetrics } from '../../data/analyticsSelectors';
 
 export default function ContinuityDRPage() {
+  const opMetrics = getServiceOperationMetrics();
+
   const drSystems = [
     { system: 'SAP S/4HANA 2025 Core', primary: 'Abu Dhabi DC 1', drSite: 'Al Ain DR DC 2', rtoActual: '45 mins (Target: 2h)', rpoActual: '4 mins (Target: 15m)', replication: 'HANA System Replication (Sync)', status: 'Failover Ready' },
     { system: 'SAP BW/4HANA Analytics', primary: 'Abu Dhabi DC 1', drSite: 'Al Ain DR DC 2', rtoActual: '1h 10m (Target: 4h)', rpoActual: '8 mins (Target: 30m)', replication: 'HANA System Replication (Async)', status: 'Failover Ready' },
@@ -28,7 +31,23 @@ export default function ContinuityDRPage() {
       </div>
 
       {/* KPI Tiles */}
-      <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(210px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+      <div className="kpi-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+        <KPICard
+          title="Total DR Planned This Month"
+          value={`${opMetrics.totalDrPlanned}`}
+          target="4 Drills Scheduled"
+          status="info"
+          subtitle="Monthly Drill Cadence"
+          icon={CalendarCheck}
+        />
+        <KPICard
+          title="DR Success Rate"
+          value={`${opMetrics.drSuccessRate}%`}
+          target="100% Target"
+          status="success"
+          subtitle="Simulated DR Drills Passed"
+          icon={CheckCircle2}
+        />
         <KPICard
           title="RTO Performance"
           value="45 mins"
@@ -44,13 +63,6 @@ export default function ContinuityDRPage() {
           status="success"
           subtitle="Recovery Point Objective"
           icon={HardDrive}
-        />
-        <KPICard
-          title="Annual DR Drill Score"
-          value="100% Pass"
-          status="success"
-          subtitle="Simulated total DC failover"
-          icon={ShieldCheck}
         />
         <KPICard
           title="Replication Lag"

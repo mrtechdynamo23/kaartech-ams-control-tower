@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { getEnrichedResources } from '../../../data/organizationData';
 import { isResourceAvailable } from '../../../data/timeManagementStore';
+import { getResourceUtilizationMetrics } from '../../../data/analyticsSelectors';
 
 export default function ResourceDetailModal({
   isOpen,
@@ -56,6 +57,8 @@ export default function ResourceDetailModal({
   const normalizedId = (rawId || '').replace(/^res-/, '');
   const res = enrichedList.find(r => r.id === rawId || r.id === normalizedId) || initialResource;
   if (!res) return null;
+
+  const utilMetrics = getResourceUtilizationMetrics(res.id);
 
   // Calculate days since onboarding
   const onboarding = res.onboardingDate ? new Date(res.onboardingDate) : new Date('2025-08-01');
@@ -231,6 +234,18 @@ export default function ResourceDetailModal({
             <div>
               <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 600 }}>Tenure</div>
               <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-primary)' }}>{daysSinceOnboarding}d ({monthsSinceOnboarding}m)</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 600 }}>Utilization %</div>
+              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--color-green)' }}>{utilMetrics.utilizationFormatted}</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 600 }}>Allocated Hours</div>
+              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-primary)' }}>{utilMetrics.allocatedHours}h</div>
+            </div>
+            <div>
+              <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 600 }}>Utilized Hours</div>
+              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 700, color: 'var(--text-primary)' }}>{utilMetrics.utilizedHours}h</div>
             </div>
             <div>
               <div style={{ fontSize: '10px', textTransform: 'uppercase', color: 'var(--text-tertiary)', fontWeight: 600 }}>Availability</div>

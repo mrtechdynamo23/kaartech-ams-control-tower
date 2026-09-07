@@ -38,6 +38,11 @@ export default function IncidentsPage() {
 
   const analytics = useMemo(() => getIncidentAnalytics(filters), [filters]);
 
+  const p1Pct = analytics.total > 0 ? ((analytics.p1 / analytics.total) * 100).toFixed(1) : '0.0';
+  const p2Pct = analytics.total > 0 ? ((analytics.p2 / analytics.total) * 100).toFixed(1) : '0.0';
+  const p3Pct = analytics.total > 0 ? ((analytics.p3 / analytics.total) * 100).toFixed(1) : '0.0';
+  const p4Pct = analytics.total > 0 ? ((analytics.p4 / analytics.total) * 100).toFixed(1) : '0.0';
+
   const handlePriorityClick = (entry) => {
     if (filters.priority === entry.key) {
       setFilters({ ...filters, priority: 'all' });
@@ -110,6 +115,7 @@ export default function IncidentsPage() {
         <KPICard
           title="P1 Critical"
           value={analytics.p1}
+          unit={`(${p1Pct}%)`}
           status={analytics.p1 > 0 ? 'danger' : 'success'}
           subtitle="30m / 4h Target"
           icon={Flame}
@@ -119,6 +125,7 @@ export default function IncidentsPage() {
         <KPICard
           title="P2 High"
           value={analytics.p2}
+          unit={`(${p2Pct}%)`}
           status={analytics.p2 > 0 ? 'warning' : 'success'}
           subtitle="2h / 8h Target"
           sparklineData={[6, 8, 7, analytics.p2]}
@@ -127,6 +134,7 @@ export default function IncidentsPage() {
         <KPICard
           title="P3 Medium"
           value={analytics.p3}
+          unit={`(${p3Pct}%)`}
           subtitle="1d / 2d Target"
           sparklineData={[18, 22, 20, analytics.p3]}
           onClick={() => setFilters({ ...filters, priority: filters.priority === 'P3' ? 'all' : 'P3' })}
@@ -134,6 +142,7 @@ export default function IncidentsPage() {
         <KPICard
           title="P4 Low"
           value={analytics.p4}
+          unit={`(${p4Pct}%)`}
           subtitle="2d / 4d Target"
           sparklineData={[14, 18, 16, analytics.p4]}
           onClick={() => setFilters({ ...filters, priority: filters.priority === 'P4' ? 'all' : 'P4' })}
@@ -299,7 +308,7 @@ export default function IncidentsPage() {
       {/* ── Operational Register Table ── */}
       <DataTable
         title="Incident Operational Register"
-        subtitle="Click any row to open slide-out technical inspection, SLA countdown, and work notes."
+        subtitle="Click any row to open incident details."
         columns={columns}
         data={analytics.filteredList}
         onRowClick={(item) => setSelectedTicket(item)}

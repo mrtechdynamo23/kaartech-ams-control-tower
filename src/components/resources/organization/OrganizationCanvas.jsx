@@ -1049,6 +1049,7 @@ export default function OrganizationCanvas({
                                     className={`org-node-interactive resource-node ${memberDimmed ? 'node-dimmed' : ''}`}
                                     style={{
                                       width: '220px',
+                                      position: 'relative',
                                       background: 'var(--bg-card)',
                                       border: isMemberSelected
                                         ? '2px solid var(--edge-primary)'
@@ -1064,6 +1065,29 @@ export default function OrganizationCanvas({
                                     }}
                                     title={`Click to inspect specialist profile: ${member.name} (${member.id})`}
                                   >
+                                    {(memberNode.memberChangeCount > 0) && (
+                                      <span
+                                        className="member-change-badge"
+                                        title={`${memberNode.memberChangeCount} member changes for this posting`}
+                                        style={{
+                                          position: 'absolute',
+                                          top: '4px',
+                                          right: '6px',
+                                          background: 'rgba(255, 86, 34, 0.12)',
+                                          color: 'var(--edge-primary)',
+                                          border: '1px solid rgba(255, 86, 34, 0.3)',
+                                          borderRadius: '10px',
+                                          fontSize: '9px',
+                                          fontWeight: 700,
+                                          padding: '0 5px',
+                                          lineHeight: '14px',
+                                          pointerEvents: 'none',
+                                          zIndex: 2,
+                                        }}
+                                      >
+                                        {memberNode.memberChangeCount}
+                                      </span>
+                                    )}
                                     <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                                       {/* Status Dot + Initials */}
                                       <div

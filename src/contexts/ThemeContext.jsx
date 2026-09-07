@@ -11,10 +11,16 @@ const ThemeContext = createContext(null);
 export function ThemeProvider({ children }) {
   const [theme, setThemeState] = useState(() => {
     try {
+      const version = localStorage.getItem('edge-ams-theme-version');
+      if (version !== '2.1') {
+        localStorage.setItem('edge-ams-theme-version', '2.1');
+        localStorage.setItem('edge-ams-theme', 'light');
+        return 'light';
+      }
       const stored = localStorage.getItem('edge-ams-theme');
       if (stored === 'dark' || stored === 'light') return stored;
     } catch {}
-    return 'light'; // Light mode is now the PRIMARY experience per Head Feedback
+    return 'light'; // Light mode is primary
   });
 
   const [reducedMotion, setReducedMotion] = useState(() =>

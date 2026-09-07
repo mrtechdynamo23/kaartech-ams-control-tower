@@ -20,9 +20,10 @@ import {
 import KPICard from '../../components/common/KPICard';
 import ChartCard from '../../components/common/ChartCard';
 import DataTable from '../../components/common/DataTable';
-import DetailModal from '../../components/common/DetailModal';
+import ResourceDetailModal from '../../components/resources/organization/ResourceDetailModal';
 import { RESOURCES, getResourceStats } from '../../data/demoData';
 import { isResourceAvailable, subscribeTimeManagement } from '../../data/timeManagementStore';
+import { getOverallResourceUtilization } from '../../data/analyticsSelectors';
 
 export default function ResourceDirectoryPage() {
   const [selectedResource, setSelectedResource] = useState(null);
@@ -36,6 +37,7 @@ export default function ResourceDirectoryPage() {
   }, []);
 
   const stats = getResourceStats();
+  const overallUtil = useMemo(() => getOverallResourceUtilization(), []);
 
   const filteredResources = useMemo(() => {
     if (selectedTrack === 'all') return RESOURCES;
@@ -140,7 +142,7 @@ export default function ResourceDirectoryPage() {
       <div className="page-header" style={{ marginBottom: 0 }}>
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <h1 className="page-title">Resource Directory & Capability</h1>
+            <h1 className="page-title">Resource</h1>
             <span className="badge badge-primary">{stats.total} Dedicated FTEs</span>
             <span className="badge badge-success">100% Staffing Compliance</span>
           </div>
@@ -150,12 +152,22 @@ export default function ResourceDirectoryPage() {
         </div>
       </div>
 
-      {/* KPI Strip per Section 25 */}
+      {/* KPI Strip per Section 25 & Section 5 */}
       <div style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
         gap: '12px',
       }}>
+        <KPICard
+          title="Overall Resource Utilization %"
+          value={overallUtil.overallUtilizationFormatted}
+          target="90.0%"
+          status="success"
+          trend={+(overallUtil.overallUtilization - 90).toFixed(1)}
+          subtitle={`${overallUtil.totalUtilized}h / ${overallUtil.totalAllocated}h Total`}
+          icon={Briefcase}
+          sparklineData={[91, 92.5, 93.8, overallUtil.overallUtilization]}
+        />
         <KPICard
           title="Total Headcount"
           value={stats.total}
@@ -385,12 +397,12 @@ export default function ResourceDirectoryPage() {
         exportFilename="edge-resources.csv"
       />
 
-      {/* Centered Record Detail Modal (Section 23, 32) */}
-      <DetailModal
+      {/* Centered Record Detail Modal (Section 7, 23) */}
+      <ResourceDetailModal
         isOpen={Boolean(selectedResource)}
-        item={selectedResource}
+        resourceId={selectedResource?.id}
+        resource={selectedResource}
         onClose={() => setSelectedResource(null)}
-        type="resource"
       />
     </div>
   );
