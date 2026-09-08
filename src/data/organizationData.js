@@ -24,25 +24,25 @@ export const LEADERSHIP_STEERCOM = [
   {
     id: 'LEAD-01',
     name: 'Dr. Tariq Al Nuaimi',
-    role: 'EDGE AMS Program Director',
-    entity: 'EDGE Group HQ',
+    role: 'KaarTech AMS Program Director',
+    entity: 'KaarTech Corporate HQ',
     focus: 'Strategic Alignment, SteerCom Governance & Service Level Agreements',
     tier: 'Executive',
     location: 'Onsite (Abu Dhabi HQ)',
-    email: 'tariq.alnuaimi@edge.ae',
+    email: 'tariq.alnuaimi@kaartech.com',
     phone: '+971-2-XXX-0001',
-    reportsTo: 'EDGE Group CIO',
+    reportsTo: 'Enterprise SteerCom / CIO',
     status: 'Active',
   },
   {
     id: 'RES-002', // Links to actual resource in Master
     name: 'Fatima Al Zaabi',
     role: 'AMS Delivery Lead',
-    entity: 'EDGE Business Services',
+    entity: 'KaarTech Business Services',
     focus: 'Overall Operational Delivery, Cross-Domain Escalation & Service Performance',
     tier: 'Operations Command',
     location: 'Onsite',
-    email: 'fatima.z@demo.edge.ae',
+    email: 'fatima.z@kaartech.com',
     phone: '+971-50-XXX-1002',
     reportsTo: 'Dr. Tariq Al Nuaimi',
     status: 'Active',
@@ -54,11 +54,11 @@ export const LEADERSHIP_STEERCOM = [
     id: 'RES-004', // Links to actual resource in Master
     name: 'Sara Al Marzouqi',
     role: 'Quality & Governance Lead',
-    entity: 'EDGE Technologies',
+    entity: 'KaarTech Technologies',
     focus: 'Audit, Risk Compliance, CAPA Verification & Continuous Improvement',
     tier: 'Quality & Governance',
     location: 'Onsite',
-    email: 'sara.m@demo.edge.ae',
+    email: 'sara.m@kaartech.com',
     phone: '+971-50-XXX-1004',
     reportsTo: 'Fatima Al Zaabi',
     status: 'Active',
@@ -82,7 +82,7 @@ export const DOMAIN_LEADS = {
 
 // ── Helper: Get Entity Object by ID ──
 export function getEntityById(entityId) {
-  return ENTITIES.find(e => e.id === entityId) || { id: entityId, name: 'EDGE Entity', location: 'Abu Dhabi' };
+  return ENTITIES.find(e => e.id === entityId) || { id: entityId, name: 'Enterprise Entity', location: 'Abu Dhabi' };
 }
 
 // ── Helper: Get Resource by ID ──
@@ -114,11 +114,11 @@ export function getEnrichedResources() {
     skill: 'Executive Leadership, SteerCom Governance, Defense IT Strategy',
     certification: 'PMP, ITIL v4 Master, TOGAF 9.2',
     phone: director.phone || '+971-2-XXX-0001',
-    email: director.email || 'tariq.alnuaimi@edge.ae',
+    email: director.email || 'tariq.alnuaimi@kaartech.com',
     entity: 'ENT-001',
     entityObj: getEntityById('ENT-001'),
     directReports: ['RES-002'],
-    managerInfo: { id: 'CIO', name: 'EDGE Group CIO', role: 'Group CIO', businessDomain: 'Executive' },
+    managerInfo: { id: 'CIO', name: 'Enterprise CIO', role: 'Group CIO', businessDomain: 'Executive' },
   });
 
   RESOURCES.forEach(res => {
@@ -147,7 +147,7 @@ export function getEnrichedResources() {
       res.managerInfo = {
         id: 'LEAD-01',
         name: 'Dr. Tariq Al Nuaimi',
-        role: 'EDGE AMS Program Director',
+        role: 'KaarTech AMS Program Director',
         businessDomain: 'Executive',
       };
     }
@@ -251,7 +251,7 @@ export function buildOrganizationTree() {
   const rootNode = {
     id: 'org-root',
     type: 'leadership',
-    name: 'EDGE AMS Leadership & SteerCom',
+    name: 'KaarTech AMS Leadership & SteerCom',
     director: LEADERSHIP_STEERCOM[0],
     deliveryLead: LEADERSHIP_STEERCOM[1],
     governanceLead: LEADERSHIP_STEERCOM[2],
@@ -490,15 +490,18 @@ export const RECENT_ORGANIZATION_CHANGES = [
     status: 'Completed',
   },
   {
-    id: 'CHG-004',
-    date: '2026-07-15',
-    category: 'Onsite Rotation',
-    title: 'Aisha Khalfan Stationed at EDGE Commercial Hub',
-    description: 'Onsite vendor management lead positioned at EDGE Corporate HQ for direct vendor alignment and procurement governance.',
-    affectedDomain: 'S2P',
-    personnel: 'Aisha Khalfan (RES-010)',
-    location: 'Onsite (Abu Dhabi HQ)',
-    status: 'Completed',
+      id: 'CHG-004',
+      date: '2026-07-20',
+      type: 'relocation',
+      badge: 'Location Transfer',
+      title: 'Aisha Khalfan Stationed at Enterprise Commercial Hub',
+      description: 'Onsite vendor management lead positioned at Enterprise Corporate HQ for direct vendor alignment and procurement governance.',
+      affectedId: 'RES-010',
+      affectedName: 'Aisha Khalfan',
+      affectedRole: 'Functional Consultant (S2P)',
+      businessDomain: 'S2P',
+      location: 'KaarTech Corporate HQ',
+      status: 'Completed',
   },
   {
     id: 'CHG-005',
