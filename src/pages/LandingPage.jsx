@@ -65,7 +65,7 @@ const DOMAIN_PILLARS = [
 ];
 
 const OPERATIONAL_METRICS = [
-  { label: 'EDGE Group Entities', value: '34', change: 'Integrated & Active', icon: Globe },
+  { label: 'Enterprise Entities', value: '34', change: 'Integrated & Active', icon: Globe },
   { label: 'Core Mission Applications', value: '26', change: 'S/4HANA, SF, Ariba, D365', icon: Server },
   { label: 'Middleware Interfaces', value: '64', change: 'CPI, Kafka, Secure OData', icon: Network },
   { label: 'Core Platform Uptime', value: '99.64%', change: 'Target 99.5% Exceeded', icon: Activity },
@@ -227,7 +227,7 @@ const DELIVERY_TRACKS = [
     code: 'AMS-ON-RUN',
     title: 'Onsite Dedicated Operations',
     titleAr: 'العمليات الميدانية المخصصة',
-    desc: 'Full-time onsite incident commanders and technical leads stationed at EDGE HQ in Abu Dhabi for executive escalations.',
+    desc: 'Full-time onsite incident commanders and technical leads stationed at Enterprise HQ for executive escalations.',
     sla: '15-Minute P1 Response SLA'
   },
   {
@@ -407,8 +407,8 @@ export default function LandingPage() {
             </h2>
             <p className="landing-hero-description">
               {language === 'ar'
-                ? 'إدارة تطبيقات المؤسسات • العمليات • الحوكمة • الأداء عبر 34 جهة تابعة لمجموعة إيدج'
-                : 'Enterprise Application Management Services • Operations • Governance • Real-Time Operational Intelligence across 34 EDGE Group Entities'}
+                ? 'إدارة تطبيقات المؤسسات • العمليات • الحوكمة • الأداء عبر 34 جهة مؤسسية'
+                : 'Enterprise Application Management Services • Operations • Governance • Real-Time Operational Intelligence across 34 Enterprise Entities'}
             </p>
           </div>
 
@@ -481,12 +481,12 @@ export default function LandingPage() {
               {language === 'ar' ? 'النطاق والمقاييس التشغيلية' : 'ENTERPRISE OPERATIONAL SCOPE'}
             </span>
             <h3 className="landing-section-title">
-              {language === 'ar' ? 'القدرة التشغيلية الموحدة لمجموعة إيدج' : 'Unified Scale Across the AdvantEDGE Landscape'}
+              {language === 'ar' ? 'القدرة التشغيلية الموحدة عبر المشهد المؤسسي' : 'Unified Scale Across the KaarTech AMS Landscape'}
             </h3>
             <p className="landing-section-desc">
               {language === 'ar'
-                ? 'تغطية شاملة لـ 34 جهة دفاعية وتقنية متقدمة مع ضمان أعلى مستويات الجاهزية التشغيلية والأمان السيبراني.'
-                : 'Mission-critical application lifecycle management engineered for high-availability defense platforms, severe environments, and sovereign compliance.'}
+                ? 'تغطية شاملة لـ 34 جهة وتقنية متقدمة مع ضمان أعلى مستويات الجاهزية التشغيلية والأمان المؤسسي.'
+                : 'Mission-critical application lifecycle management engineered for high-availability enterprise platforms and regulatory compliance.'}
             </p>
           </div>
 
@@ -522,8 +522,8 @@ export default function LandingPage() {
             </h3>
             <p className="landing-section-desc">
               {language === 'ar'
-                ? 'بنية متكاملة تغطي العمليات الميدانية، والحوكمة، وصحة الأنظمة، وذكاء الأعمال، والابتكار.'
-                : 'Structured governance, continuous observability, predictive analytics, and automated shift operations purpose-built for EDGE Group.'}
+                ? 'حوكمة منظمة، ومراقبة مستمرة، وتحليلات تنبؤية، وعمليات ورديات مؤتمتة مخصصة لتميز المؤسسات.'
+                : 'Structured governance, continuous observability, predictive analytics, and automated shift operations purpose-built for enterprise excellence.'}
             </p>
           </div>
 
@@ -579,7 +579,7 @@ export default function LandingPage() {
               {language === 'ar' ? 'الهيكلية التقنية' : 'ENTERPRISE ARCHITECTURE'}
             </span>
             <h3 className="landing-section-title">
-              {language === 'ar' ? 'بنية AdvantEDGE المتكاملة ذات الـ 4 طبقات' : 'AdvantEDGE 4-Tier Defense Architecture'}
+              {language === 'ar' ? 'بنية KaarTech المؤسسية عبر 4 مستويات' : 'KaarTech 4-Tier Enterprise Architecture'}
             </h3>
             <p className="landing-section-desc">
               {language === 'ar'
@@ -624,7 +624,7 @@ export default function LandingPage() {
         <div className="landing-section-container">
           <div className="landing-section-header">
             <span className="landing-section-eyebrow">
-              {language === 'ar' ? 'قطاعات مجموعة إيدج' : 'EDGE DEFENSE CLUSTERS'}
+              {language === 'ar' ? 'القطاعات التشغيلية' : 'ENTERPRISE OPERATIONAL CLUSTERS'}
             </span>
             <h3 className="landing-section-title">
               {language === 'ar' ? 'القطاعات والشركات المدعومة تشغيلياً' : 'Specialized Operational Coverage'}
@@ -735,7 +735,7 @@ export default function LandingPage() {
                   <div className="landing-preview-item">
                     <span className="landing-item-date">SEP 28</span>
                     <span className="landing-item-tag tag-release">Release</span>
-                    <span className="landing-item-text">AdvantEDGE September Production Sprint Release</span>
+                    <span className="landing-item-text">KaarTech September Production Sprint Release</span>
                   </div>
                   <div className="landing-preview-item">
                     <span className="landing-item-date">OCT 09</span>
@@ -761,7 +761,7 @@ export default function LandingPage() {
             <div className="landing-cta-inner">
               <div className="landing-cta-badge">
                 <Shield size={14} className="landing-cta-badge-icon" />
-                <span>RESTRICTED DEFENSE ENVIRONMENT • EDGE INTERNAL USE ONLY</span>
+                <span>ENTERPRISE AMS ENVIRONMENT • KAARTECH AUTHORIZED USE ONLY</span>
               </div>
 
               <h2 className="landing-cta-heading">
@@ -824,7 +824,7 @@ export default function LandingPage() {
               </p>
               <div className="landing-footer-sec-badge">
                 <Lock size={12} />
-                <span>OFFICIAL // STRICT DEFENSE PRIVILEGED</span>
+                <span>OFFICIAL // ENTERPRISE PRIVILEGED</span>
               </div>
             </div>
 

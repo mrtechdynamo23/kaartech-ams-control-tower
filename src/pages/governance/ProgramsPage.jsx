@@ -29,7 +29,7 @@ export default function ProgramsPage() {
       id: 'PRG-002',
       name: 'SuccessFactors HXM Harmonization',
       lead: 'Sara Al Marzouqi',
-      entities: 'All 34 EDGE Group Entities',
+      entities: 'All 34 Enterprise Entities',
       progress: 94,
       status: 'On Track',
       targetGoLive: 'Q3 2026',

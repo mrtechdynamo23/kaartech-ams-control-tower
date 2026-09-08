@@ -27,11 +27,11 @@ export const BUSINESS_DOMAINS = [
 // ═══════════════════════════════════════════════════
 export const ENTITIES = [
   // Service Entities (27)
-  { id: 'ENT-001', name: 'EDGE Corp.', type: 'HQ', subType: 'Group HQ', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
-  { id: 'ENT-002', name: 'EDGE Business Services', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
-  { id: 'ENT-003', name: 'EDGE Commercial', type: 'Trading', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
-  { id: 'ENT-004', name: 'EDGE Global', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
-  { id: 'ENT-005', name: 'EDGE Technologies', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
+  { id: 'ENT-001', name: 'KaarTech Corp.', type: 'HQ', subType: 'Group HQ', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
+  { id: 'ENT-002', name: 'KaarTech Business Services', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
+  { id: 'ENT-003', name: 'KaarTech Commercial', type: 'Trading', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
+  { id: 'ENT-004', name: 'KaarTech Global', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
+  { id: 'ENT-005', name: 'KaarTech Technologies', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
   { id: 'ENT-006', name: 'Advanced Concepts', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
   { id: 'ENT-007', name: 'Al Taif', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },
   { id: 'ENT-008', name: 'Avantguard', type: 'Service', calendarKey: 'hqServiceTrading', country: 'UAE', location: 'Abu Dhabi', status: 'Active', goLiveStatus: 'Live' },

@@ -18,7 +18,7 @@ export default function ExecutiveReportPage() {
             <h1 className="page-title">Executive Briefing & C-Level Deck</h1>
             <span className="badge badge-success">Group Leadership Briefing</span>
           </div>
-          <p className="page-subtitle">Strategic overview for the EDGE Group Executive Committee, Managing Director, and CIO.</p>
+          <p className="page-subtitle">Strategic overview for the Executive Committee, Managing Director, and CIO.</p>
         </div>
 
         <div style={{ display: 'flex', gap: '10px' }}>
@@ -70,7 +70,7 @@ export default function ExecutiveReportPage() {
       <div className="chart-card" style={{ padding: '28px' }}>
         <div style={{ borderBottom: '2px solid var(--edge-primary)', paddingBottom: '16px', marginBottom: '20px' }}>
           <span style={{ fontSize: 'var(--text-xs)', fontWeight: 700, color: 'var(--edge-primary)', letterSpacing: '0.06em', textTransform: 'uppercase' }}>
-            EDGE Group PJSC — Operational Intelligence
+            KaarTech AMS — Operational Intelligence
           </span>
           <h2 style={{ fontSize: 'var(--text-xl)', fontWeight: 700, color: 'var(--text-primary)', margin: '4px 0 0' }}>
             Quarterly AMS Governance & Transformation Review

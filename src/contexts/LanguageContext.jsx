@@ -69,7 +69,7 @@ const translations = {
       signingIn: 'Signing in...',
     },
     landing: {
-      title: 'EDGE AMS CONTROL TOWER',
+      title: 'KAARTECH AMS CONTROL TOWER',
       subtitle: 'One operational view across applications, services, people, and performance.',
       enterCta: 'ENTER CONTROL TOWER',
       viewIntegrated: 'View the integrated operational picture.',
@@ -246,7 +246,7 @@ const translations = {
       signingIn: 'جارِ تسجيل الدخول...',
     },
     landing: {
-      title: 'برج مراقبة EDGE AMS',
+      title: 'برج مراقبة KAARTECH AMS',
       subtitle: 'رؤية تشغيلية واحدة عبر التطبيقات والخدمات والأفراد والأداء.',
       enterCta: 'دخول برج المراقبة',
       viewIntegrated: 'عرض الصورة التشغيلية المتكاملة.',

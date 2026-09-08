@@ -11,7 +11,7 @@ export default function CreateTicketModal({ isOpen, onClose, onCreate, initialTy
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('P2');
-  const [entity, setEntity] = useState(ENTITIES[0]?.name || 'EDGE Corp.');
+  const [entity, setEntity] = useState(ENTITIES[0]?.name || 'KaarTech Corp.');
   const [domain, setDomain] = useState(BUSINESS_DOMAINS[0]?.key || 'L2C');
   const [app, setApp] = useState(APPLICATIONS[0]?.name || 'SAP S/4HANA 2025');
   const [srType, setSrType] = useState('Standard');

@@ -89,7 +89,7 @@ export default function DFRReportPage() {
             <span className="badge badge-primary">24h Executive Pulse</span>
           </div>
           <p className="page-subtitle" style={{ margin: '4px 0 0' }}>
-            Standardized daily operational snapshot for EDGE Group IT Leadership and Steering Committee.
+            Standardized daily operational snapshot for KaarTech AMS IT Leadership and Steering Committee.
           </p>
         </div>
 

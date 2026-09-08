@@ -54,16 +54,12 @@ export default function LoginPage() {
     <div className="login-page">
       {/* ── Left Panel: EDGE Identity with Defense Atmosphere ── */}
       <div className="login-left">
-        {/* Subtle defense atmosphere background image */}
+        {/* Sleek tech atmosphere gradient mask */}
         <div
           style={{
             position: 'absolute',
             inset: 0,
-            backgroundImage: 'url(/assets/edge-hero-air.jpg)',
-            backgroundSize: 'cover',
-            backgroundPosition: 'center',
-            opacity: 0.22,
-            filter: 'grayscale(20%) contrast(115%)',
+            background: 'radial-gradient(circle at 20% 30%, rgba(255, 86, 34, 0.07) 0%, transparent 60%)',
           }}
         />
         {/* Gradient dark mask */}
@@ -144,7 +140,7 @@ export default function LoginPage() {
           <div className="login-left-highlights">
             <div className="login-highlight-pill">
               <Shield size={13} style={{ color: '#FF5622' }} />
-              <span>Defense Grade SLA 99.9%</span>
+              <span>Enterprise Grade SLA 99.9%</span>
             </div>
             <div className="login-highlight-pill">
               <Lock size={13} style={{ color: '#FF5622' }} />

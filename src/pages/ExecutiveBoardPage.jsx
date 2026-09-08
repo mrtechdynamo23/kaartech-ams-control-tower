@@ -47,7 +47,7 @@ export default function ExecutiveBoardPage() {
             </span>
           </div>
           <p className="page-subtitle" style={{ margin: '4px 0 0' }}>
-            Integrated AMS operational intelligence across 34 EDGE Group entities and 26 in-scope enterprise applications.
+            Integrated AMS operational intelligence across 34 Enterprise operating entities and 26 in-scope enterprise applications.
           </p>
         </div>
 

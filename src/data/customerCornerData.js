@@ -22,31 +22,31 @@ import { incidents, serviceRequests } from './demoData';
 export const STAKEHOLDER_SIDES = ['EDGE', 'AMS', 'THIRD PARTY'];
 
 export const SIDE_META = {
-  EDGE:          { label: 'EDGE (Client)',    short: 'EDGE',        bg: 'rgba(37, 99, 235, 0.14)', color: '#93C5FD', border: 'rgba(59, 130, 246, 0.28)' },
-  AMS:           { label: 'AMS (Contractor)', short: 'AMS',         bg: 'rgba(16, 185, 129, 0.12)', color: '#6EE7B7', border: 'rgba(16, 185, 129, 0.25)' },
-  'THIRD PARTY': { label: 'Third Party',      short: 'THIRD PARTY', bg: 'rgba(156, 163, 175, 0.12)', color: '#D1D5DB', border: 'rgba(156, 163, 175, 0.25)' },
+  EDGE:          { label: 'Enterprise (Client)', short: 'Enterprise', bg: 'rgba(37, 99, 235, 0.14)', color: '#93C5FD', border: 'rgba(59, 130, 246, 0.28)' },
+  AMS:           { label: 'KaarTech AMS',        short: 'KaarTech',   bg: 'rgba(16, 185, 129, 0.12)', color: '#6EE7B7', border: 'rgba(16, 185, 129, 0.25)' },
+  'THIRD PARTY': { label: 'Third Party',         short: 'THIRD PARTY', bg: 'rgba(156, 163, 175, 0.12)', color: '#D1D5DB', border: 'rgba(156, 163, 175, 0.25)' },
 };
 
 // ─── STAKEHOLDERS ────────────────────────────────────────────────────────────
 
 export const cornerStakeholders = [
-  // EDGE — Client stakeholders
-  { id: 'EDGE-01', name: 'Khalid Al Hashimi',    title: 'ERP Solutions Lead',                          org: 'EDGE Corp.',            side: 'EDGE',        escalationTier: 'EDGE Solutions' },
-  { id: 'EDGE-02', name: 'Fatima Al Zaabi',       title: 'Governance & Compliance Manager',             org: 'EDGE Corp.',            side: 'EDGE',        escalationTier: null },
-  { id: 'EDGE-03', name: 'Noura Al Shamsi',       title: 'Finance Business Superuser (S/4 FI)',         org: 'EDGE Business Services', side: 'EDGE',       escalationTier: null },
-  { id: 'EDGE-04', name: 'Abdulrahman Darwish',   title: 'Supply Chain Business Superuser (Ariba/VIM)', org: 'EDGE Commercial',        side: 'EDGE',       escalationTier: null },
-  { id: 'EDGE-05', name: 'Layla Al Qassimi',      title: 'HR Business Superuser (SuccessFactors)',      org: 'EDGE Corp.',            side: 'EDGE',        escalationTier: null },
-  { id: 'EDGE-06', name: 'Tariq Al Dhaheri',      title: 'Infrastructure & Security Coordinator',       org: 'EDGE Technologies',     side: 'EDGE',        escalationTier: null },
+  // Enterprise — Client stakeholders
+  { id: 'EDGE-01', name: 'Khalid Al Hashimi',    title: 'ERP Solutions Lead',                          org: 'Enterprise Corp.',            side: 'EDGE',        escalationTier: 'Enterprise Solutions' },
+  { id: 'EDGE-02', name: 'Fatima Al Zaabi',       title: 'Governance & Compliance Manager',             org: 'Enterprise Corp.',            side: 'EDGE',        escalationTier: null },
+  { id: 'EDGE-03', name: 'Noura Al Shamsi',       title: 'Finance Business Superuser (S/4 FI)',         org: 'Enterprise Business Services', side: 'EDGE',       escalationTier: null },
+  { id: 'EDGE-04', name: 'Abdulrahman Darwish',   title: 'Supply Chain Business Superuser (Ariba/VIM)', org: 'Enterprise Commercial',        side: 'EDGE',       escalationTier: null },
+  { id: 'EDGE-05', name: 'Layla Al Qassimi',      title: 'HR Business Superuser (SuccessFactors)',      org: 'Enterprise Corp.',            side: 'EDGE',        escalationTier: null },
+  { id: 'EDGE-06', name: 'Tariq Al Dhaheri',      title: 'Infrastructure & Security Coordinator',       org: 'Enterprise Technologies',     side: 'EDGE',        escalationTier: null },
 
-  // AMS — Contractor stakeholders
-  { id: 'AMS-01',  name: 'Sara Al Marzouqi',      title: 'AMS Service Delivery Manager',                org: 'AMS Provider',          side: 'AMS',         escalationTier: 'Service Delivery Manager' },
-  { id: 'AMS-02',  name: 'Priya Nair',            title: 'AMS Service Manager',                         org: 'AMS Provider',          side: 'AMS',         escalationTier: 'AMS Service Manager' },
-  { id: 'AMS-03',  name: 'Omar Bashar',           title: 'Basis & Platform Lead',                       org: 'AMS Provider',          side: 'AMS',         escalationTier: 'Domain Lead' },
-  { id: 'AMS-04',  name: 'Rakesh Kumar',          title: 'Integration (CPI) Lead',                      org: 'AMS Provider',          side: 'AMS',         escalationTier: 'Domain Lead' },
-  { id: 'AMS-05',  name: 'Meera Nambiar',         title: 'SuccessFactors Lead',                         org: 'AMS Provider',          side: 'AMS',         escalationTier: 'Domain Lead' },
-  { id: 'AMS-06',  name: 'Ravi Shankar',          title: 'Ariba & VIM Lead',                            org: 'AMS Provider',          side: 'AMS',         escalationTier: 'Domain Lead' },
-  { id: 'AMS-07',  name: 'Deepak Kumar',          title: 'Security & GRC Lead',                         org: 'AMS Provider',          side: 'AMS',         escalationTier: 'Domain Lead' },
-  { id: 'AMS-08',  name: 'Arjun Menon',           title: 'Functional Analyst — S/4 Finance',            org: 'AMS Provider',          side: 'AMS',         escalationTier: 'Analyst' },
+  // AMS — KaarTech stakeholders
+  { id: 'AMS-01',  name: 'Sara Al Marzouqi',      title: 'AMS Service Delivery Manager',                org: 'KaarTech AMS',          side: 'AMS',         escalationTier: 'Service Delivery Manager' },
+  { id: 'AMS-02',  name: 'Priya Nair',            title: 'AMS Service Manager',                         org: 'KaarTech AMS',          side: 'AMS',         escalationTier: 'AMS Service Manager' },
+  { id: 'AMS-03',  name: 'Omar Bashar',           title: 'Basis & Platform Lead',                       org: 'KaarTech AMS',          side: 'AMS',         escalationTier: 'Domain Lead' },
+  { id: 'AMS-04',  name: 'Rakesh Kumar',          title: 'Integration (CPI) Lead',                      org: 'KaarTech AMS',          side: 'AMS',         escalationTier: 'Domain Lead' },
+  { id: 'AMS-05',  name: 'Meera Nambiar',         title: 'SuccessFactors Lead',                         org: 'KaarTech AMS',          side: 'AMS',         escalationTier: 'Domain Lead' },
+  { id: 'AMS-06',  name: 'Ravi Shankar',          title: 'Ariba & VIM Lead',                            org: 'KaarTech AMS',          side: 'AMS',         escalationTier: 'Domain Lead' },
+  { id: 'AMS-07',  name: 'Deepak Kumar',          title: 'Security & GRC Lead',                         org: 'KaarTech AMS',          side: 'AMS',         escalationTier: 'Domain Lead' },
+  { id: 'AMS-08',  name: 'Arjun Menon',           title: 'Functional Analyst — S/4 Finance',            org: 'KaarTech AMS',          side: 'AMS',         escalationTier: 'Analyst' },
 
   // THIRD PARTY — vendors and product support
   { id: 'TPY-01',  name: 'SAP Product Support',   title: 'OSS incident channel',                        org: 'SAP',                   side: 'THIRD PARTY', escalationTier: null },
