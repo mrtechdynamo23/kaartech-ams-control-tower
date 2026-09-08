@@ -67,7 +67,7 @@ export default function OrganizationHeader({
             </span>
           </div>
           <p className="page-subtitle" style={{ margin: '4px 0 0' }}>
-            AMS delivery organization, reporting relationships, and multi-tier resource coverage across EDGE.
+            AMS delivery organization, reporting relationships, and multi-tier resource coverage across enterprise operations.
           </p>
         </div>
 

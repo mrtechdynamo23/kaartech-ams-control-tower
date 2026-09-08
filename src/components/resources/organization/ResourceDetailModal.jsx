@@ -545,8 +545,8 @@ export default function ResourceDetailModal({
                   Delivery Alignment & Governance
                 </div>
                 <p style={{ margin: 0, fontSize: 'var(--text-xs)', color: 'var(--text-secondary)', lineHeight: 1.6 }}>
-                  Resource assigned to the {res.track} contractual track supporting EDGE application operations.
-                  Certified in accordance with EDGE AMS Level 2/Level 3 service support thresholds.
+                  Resource assigned to the {res.track} contractual track supporting enterprise application operations.
+                  Certified in accordance with KaarTech AMS Level 2/Level 3 service support thresholds.
                 </p>
               </div>
             </div>
@@ -660,8 +660,8 @@ export default function ResourceDetailModal({
                   <div style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>Deployment Base</div>
                   <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)' }}>
                     {res.location === 'Onsite'
-                      ? 'EDGE HQ, Abu Dhabi, United Arab Emirates (Client Premises)'
-                      : 'AMS Remote Delivery Center (Offshore Center Pool)'}
+                      ? 'Enterprise Client HQ, Abu Dhabi, United Arab Emirates (Client Premises)'
+                      : 'KaarTech Remote Delivery Center (Offshore Center Pool)'}
                   </div>
                 </div>
               </div>
