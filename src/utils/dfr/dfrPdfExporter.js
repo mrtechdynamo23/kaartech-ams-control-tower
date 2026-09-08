@@ -33,9 +33,9 @@ export async function exportDfrToPdf(targetDateOrSnapshot = '2026-07-31') {
     doc.setProperties({
       title: `Daily Flash Report (DFR) - ${snapshot.formattedDate}`,
       subject: 'Daily Flash Report',
-      author: 'EDGE AMS Control Tower',
-      keywords: 'DFR, EDGE AMS, Daily Flash Report, Service Requests, Incidents, SLA',
-      creator: 'EDGE AMS Control Tower PDF Engine',
+      author: 'AMS Control Tower',
+      keywords: 'DFR, AMS Control Tower, Daily Flash Report, Service Requests, Incidents, SLA',
+      creator: 'AMS Control Tower PDF Engine',
     });
 
     // 4. Render Page 1 (Header, Comparison Tables, SR Donut, SR Trend, SLA Alert)
@@ -45,7 +45,7 @@ export async function exportDfrToPdf(targetDateOrSnapshot = '2026-07-31') {
     renderPage2(doc, snapshot);
 
     // 6. Filename following agreed naming convention
-    const filename = `EDGE_AMS_DFR_${snapshot.formattedDate}.pdf`;
+    const filename = `AMS_Control_Tower_DFR_${snapshot.formattedDate}.pdf`;
 
     // 7. Save / Trigger client download
     doc.save(filename);
@@ -95,14 +95,14 @@ export async function generateDfrPdfDocument(targetDateOrSnapshot = '2026-07-31'
   doc.setProperties({
     title: `Daily Flash Report (DFR) - ${snapshot.formattedDate}`,
     subject: 'Daily Flash Report',
-    author: 'EDGE AMS Control Tower',
-    keywords: 'DFR, EDGE AMS, Daily Flash Report, Service Requests, Incidents, SLA',
-    creator: 'EDGE AMS Control Tower PDF Engine',
+    author: 'AMS Control Tower',
+    keywords: 'DFR, AMS Control Tower, Daily Flash Report, Service Requests, Incidents, SLA',
+    creator: 'AMS Control Tower PDF Engine',
   });
 
   renderPage1(doc, snapshot);
   renderPage2(doc, snapshot);
 
-  const filename = `EDGE_AMS_DFR_${snapshot.formattedDate}.pdf`;
+  const filename = `AMS_Control_Tower_DFR_${snapshot.formattedDate}.pdf`;
   return { doc, filename, snapshot };
 }

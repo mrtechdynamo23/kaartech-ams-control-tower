@@ -106,7 +106,7 @@ function LoadingScreen() {
     }}>
       <div style={{ textAlign: 'center' }}>
         <div className="spinner spinner-lg" style={{ margin: '0 auto var(--space-base)' }} />
-        <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>Loading EDGE Control Tower...</p>
+        <p style={{ color: 'var(--text-tertiary)', fontSize: 'var(--text-sm)' }}>Loading AMS Control Tower...</p>
       </div>
     </div>
   );
@@ -188,8 +188,8 @@ function AuthenticatedLayout() {
             e.currentTarget.style.transform = 'translateY(0) scale(1)';
             e.currentTarget.style.boxShadow = '0 6px 20px rgba(209, 50, 18, 0.4), 0 2px 6px rgba(0, 0, 0, 0.12)';
           }}
-          aria-label="Open EDGE Assistant"
-          title="EDGE Assistant (AI Operational Copilot)"
+          aria-label="Open AMS Assistant"
+          title="AMS Assistant (AI Operational Copilot)"
         >
           <Bot size={22} strokeWidth={2.2} />
           <span

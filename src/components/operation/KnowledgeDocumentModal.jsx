@@ -331,7 +331,7 @@ export default function KnowledgeDocumentModal({ isOpen, document: doc, onClose 
           }}
         >
           <span style={{ fontSize: '0.6875rem', color: 'var(--text-tertiary)' }}>
-            Viewing official published procedure · EDGE AMS Knowledge Management
+            Viewing official published procedure · AMS Knowledge Management
           </span>
 
           <button

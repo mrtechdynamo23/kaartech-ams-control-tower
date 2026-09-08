@@ -24,7 +24,7 @@ export default function AssistantChatDrawer({ isOpen, onClose }) {
     {
       id: 1,
       sender: 'bot',
-      text: 'Marhaban! I am the EDGE AMS Operational Intelligence Assistant. How can I assist with governance, SLA tracking, or application estate operations today?',
+      text: 'Marhaban! I am the AMS Operational Intelligence Assistant. How can I assist with governance, SLA tracking, or application estate operations today?',
       timestamp: 'Just now',
     }
   ]);
@@ -160,7 +160,7 @@ export default function AssistantChatDrawer({ isOpen, onClose }) {
               <Bot size={18} />
             </div>
             <div>
-              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)' }}>EDGE AMS Assistant</div>
+              <div style={{ fontSize: 'var(--text-sm)', fontWeight: 600, color: 'var(--text-primary)' }}>AMS Assistant</div>
               <div style={{ fontSize: '11px', color: 'var(--color-emerald)', display: 'flex', alignItems: 'center', gap: '4px' }}>
                 <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: 'var(--color-emerald)' }} />
                 Operational Intelligence Online

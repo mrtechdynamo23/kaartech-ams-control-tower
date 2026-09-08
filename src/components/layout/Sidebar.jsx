@@ -183,8 +183,8 @@ export default function Sidebar({ collapsed, onToggle }) {
           }}
         >
           <img
-            src="/assets/edge-logo.png"
-            alt="EDGE Logo"
+            src="/assets/kaartech logo.png"
+            alt="KaarTech Logo"
             style={{
               height: collapsed ? '18px' : '22px',
               maxWidth: collapsed ? '28px' : '65px',

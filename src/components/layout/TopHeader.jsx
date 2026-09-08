@@ -229,11 +229,11 @@ export default function TopHeader({ collapsed, onToggleSidebar, onOpenAssistant 
               marginRight: '8px',
               flexShrink: 0,
             }}
-            title="EDGE AMS Control Tower"
+            title="AMS Control Tower"
           >
             <img
-              src="/assets/edge-logo.png"
-              alt="EDGE Logo"
+              src="/assets/kaartech logo.png"
+              alt="KaarTech Logo"
               style={{ height: '18px', objectFit: 'contain' }}
             />
             <span style={{ fontSize: '11px', fontWeight: 700, color: 'var(--text-primary)', letterSpacing: '0.04em' }}>
@@ -263,8 +263,8 @@ export default function TopHeader({ collapsed, onToggleSidebar, onOpenAssistant 
             <button
               className="header-action-btn"
               onClick={onOpenAssistant}
-              aria-label="EDGE AI Assistant"
-              title="EDGE AI Assistant"
+              aria-label="AMS AI Assistant"
+              title="AMS AI Assistant"
               style={{ color: 'var(--edge-primary)' }}
             >
               <Bot size={18} />

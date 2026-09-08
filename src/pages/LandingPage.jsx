@@ -309,8 +309,8 @@ export default function LandingPage() {
         <div className="landing-header-left">
           <div className="landing-brand-badge">
             <img
-              src="/assets/edge-logo.png"
-              alt="EDGE Logo"
+              src="/assets/kaartech logo.png"
+              alt="KaarTech Logo"
               className="landing-edge-logo"
             />
           </div>
@@ -399,7 +399,6 @@ export default function LandingPage() {
           <div className="landing-title-block">
             <div className="landing-brand-row">
               <h1 className="landing-hero-heading">
-                <span className="landing-heading-edge">EDGE</span>
                 <span className="landing-heading-ams">AMS CONTROL TOWER</span>
               </h1>
             </div>
@@ -431,7 +430,7 @@ export default function LandingPage() {
             <button
               onClick={handleEnter}
               className="landing-enter-btn"
-              aria-label="Enter EDGE AMS Control Tower"
+              aria-label="Enter AMS Control Tower"
             >
               <span>{language === 'ar' ? 'دخول برج المراقبة' : 'ENTER CONTROL TOWER'}</span>
               <ArrowRight size={18} className="landing-btn-arrow" />
@@ -815,14 +814,13 @@ export default function LandingPage() {
             <div className="landing-footer-col brand-col">
               <div className="landing-brand-badge" style={{ display: 'inline-flex', marginBottom: '14px' }}>
                 <img
-                  src="/assets/edge-logo.png"
-                  alt="EDGE Logo"
+                  src="/assets/kaartech logo.png"
+                  alt="KaarTech Logo"
                   className="landing-edge-logo"
                 />
               </div>
               <p className="landing-footer-brand-text">
-                EDGE Group PJSC — Advanced Technology & Defense Conglomerate.
-                AdvantEDGE Enterprise Application Management Services Control Tower.
+                AMS Control Tower — Enterprise Application Management Services Platform.
               </p>
               <div className="landing-footer-sec-badge">
                 <Lock size={12} />
@@ -863,7 +861,7 @@ export default function LandingPage() {
           </div>
 
           <div className="landing-footer-bottom-bar">
-            <span>© 2026 EDGE Group PJSC. All rights reserved. AdvantEDGE AMS Control Tower.</span>
+            <span>© 2026 AMS Control Tower. All rights reserved.</span>
             <span>Security Classification: OFFICIAL // RESTRICTED ACCESS</span>
           </div>
         </div>

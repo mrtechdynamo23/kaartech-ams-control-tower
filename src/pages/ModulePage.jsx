@@ -74,7 +74,7 @@ export default function ModulePage() {
         </div>
         <h2 className="state-title">Module Under Construction</h2>
         <p className="state-description">
-          This module is being implemented as part of the EDGE AMS Control Tower build.
+          This module is being implemented as part of the AMS Control Tower build.
           The data architecture, relationships, and master data are already in place.
         </p>
         <div style={{ display: 'flex', gap: 'var(--space-sm)', marginTop: 'var(--space-base)' }}>

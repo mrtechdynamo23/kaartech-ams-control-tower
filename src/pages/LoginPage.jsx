@@ -122,8 +122,8 @@ export default function LoginPage() {
               }}
             >
               <img
-                src="/assets/edge-logo.png"
-                alt="EDGE Official Logo"
+                src="/assets/kaartech logo.png"
+                alt="KaarTech Logo"
                 style={{ height: '36px', maxWidth: '140px', objectFit: 'contain' }}
               />
             </div>
@@ -137,7 +137,7 @@ export default function LoginPage() {
           <div className="login-left-tagline">
             <div className="login-accent-bar" />
             <h2 className="login-left-title">Application Management Services</h2>
-            <p className="login-left-sub">Operational Intelligence Platform • AdvantEDGE Landscape</p>
+            <p className="login-left-sub">Operational Intelligence Platform • AMS Landscape</p>
           </div>
 
           {/* Defense telemetry capability highlights */}
@@ -152,7 +152,7 @@ export default function LoginPage() {
             </div>
             <div className="login-highlight-pill">
               <span className="login-pulse-dot" />
-              <span>8 AdvantEDGE Streams</span>
+              <span>8 Operational Streams</span>
             </div>
           </div>
 
@@ -184,7 +184,7 @@ export default function LoginPage() {
             <div className="login-card-header">
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
                 <div style={{ background: '#ffffff', padding: '3px 8px', borderRadius: '5px', display: 'inline-flex' }}>
-                  <img src="/assets/edge-logo.png" alt="EDGE Logo" style={{ height: '18px', objectFit: 'contain' }} />
+                  <img src="/assets/kaartech logo.png" alt="KaarTech Logo" style={{ height: '18px', objectFit: 'contain' }} />
                 </div>
                 <span className="badge badge-primary" style={{ fontSize: '10px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   Corporate Access
@@ -281,7 +281,7 @@ export default function LoginPage() {
         </div>
 
         <div className="login-right-footer">
-          <span>© 2026 EDGE Group PJSC. All rights reserved.</span>
+          <span>© 2026 AMS Control Tower. All rights reserved.</span>
         </div>
       </div>
     </div>
