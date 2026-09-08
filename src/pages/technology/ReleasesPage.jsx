@@ -8,9 +8,9 @@ import KPICard from '../../components/common/KPICard';
 
 export default function ReleasesPage() {
   const releases = [
-    { id: 'REL-2026-08', name: 'AdvantEDGE August Maintenance Bundle', type: 'Major Release', date: '2026-08-28', changesCount: 14, status: 'Scheduled', freeze: 'Normal' },
+    { id: 'REL-2026-08', name: 'KaarTech August Maintenance Bundle', type: 'Major Release', date: '2026-08-28', changesCount: 14, status: 'Scheduled', freeze: 'Normal' },
     { id: 'REL-2026-07', name: 'July Critical Hotfix & Tax Update', type: 'Emergency Patch', date: '2026-07-15', changesCount: 4, status: 'Deployed', freeze: 'Normal' },
-    { id: 'REL-2026-06', name: 'AdvantEDGE June Feature Sprint', type: 'Major Release', date: '2026-06-30', changesCount: 22, status: 'Deployed', freeze: 'Normal' },
+    { id: 'REL-2026-06', name: 'KaarTech June Feature Sprint', type: 'Major Release', date: '2026-06-30', changesCount: 22, status: 'Deployed', freeze: 'Normal' },
     { id: 'REL-2026-05', name: 'SuccessFactors Compensation Patch', type: 'Cloud Update', date: '2026-05-20', changesCount: 8, status: 'Deployed', freeze: 'Normal' },
   ];
 

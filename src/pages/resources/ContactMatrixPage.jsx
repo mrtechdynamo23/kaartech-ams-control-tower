@@ -51,7 +51,7 @@ export default function ContactMatrixPage() {
             <span className="badge badge-error">24/7 Active On-Call</span>
             <span className="badge badge-primary">{RESOURCES.length} Master Personnel</span>
           </div>
-          <p className="page-subtitle">Standardized emergency call-out protocols, management hierarchy, OEM hotlines, and complete EDGE resource directory.</p>
+          <p className="page-subtitle">Standardized emergency call-out protocols, management hierarchy, OEM hotlines, and complete enterprise resource directory.</p>
         </div>
       </div>
 

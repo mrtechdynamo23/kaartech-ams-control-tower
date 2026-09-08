@@ -60,7 +60,7 @@ export default function LandscapePage() {
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <h1 className="page-title">Enterprise Architecture & Landscape</h1>
-            <span className="badge badge-primary">AdvantEDGE 4-Tier Stack</span>
+            <span className="badge badge-primary">KaarTech 4-Tier Stack</span>
           </div>
           <p className="page-subtitle">Interactive map of digital channels, core transactional backbones, middleware brokers, and data layers.</p>
         </div>
