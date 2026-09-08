@@ -88,7 +88,7 @@ export default function ServiceRequestsPage() {
             <span className="badge badge-neutral">Standard &lt;16h / Major ≥16h</span>
           </div>
           <p className="page-subtitle">
-            Contractual service fulfilment across AdvantEDGE business domains with effort-bounded SLA tracking.
+            Contractual service fulfilment across enterprise business domains with effort-bounded SLA tracking.
           </p>
         </div>
 

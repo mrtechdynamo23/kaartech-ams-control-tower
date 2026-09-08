@@ -146,8 +146,8 @@ export default function CustomerCornerPage() {
 
   const sideFilterOptions = useMemo(() => [
     { value: 'All', label: 'All Stakeholders' },
-    { value: 'EDGE', label: 'EDGE involved' },
-    { value: 'AMS', label: 'AMS involved' },
+    { value: 'EDGE', label: 'Client involved' },
+    { value: 'AMS', label: 'KaarTech AMS involved' },
     { value: 'THIRD PARTY', label: 'Third Party involved' },
   ], []);
 
@@ -264,7 +264,7 @@ export default function CustomerCornerPage() {
             Customer Corner
           </h1>
           <p className="page-subtitle" style={{ maxWidth: 760 }}>
-            One collaboration channel for every stakeholder — EDGE, AMS and third parties.
+            One collaboration channel for every stakeholder — Client, KaarTech AMS and third parties.
             Tag a ticket to talk about work already in the queue, or raise a Call To Action for work that
             has no ticket behind it yet.
           </p>

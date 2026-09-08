@@ -354,7 +354,7 @@ export default function AuditsPage() {
             <span className="badge badge-primary">SOC2 Type II Attested</span>
           </div>
           <p className="page-subtitle">
-            Formal governance reviews, audit findings register, and operational remediation task board across EDGE business domains.
+            Formal governance reviews, audit findings register, and operational remediation task board across enterprise business domains.
           </p>
         </div>
 
