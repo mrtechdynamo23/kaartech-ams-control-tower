@@ -104,7 +104,7 @@ export default function ApplicationsPage() {
             <h1 className="page-title">Application Portfolio</h1>
             <span className="badge badge-primary">{APPLICATIONS.length} Systems Cataloged</span>
           </div>
-          <p className="page-subtitle">Master repository of in-scope enterprise ERP, HXM, CRM, and cloud extensions covering the enterprise AMS landscape.</p>
+          <p className="page-subtitle">Master repository of in-scope enterprise ERP, HXM, CRM, and cloud extensions covering the KaarTech AMS landscape.</p>
         </div>
       </div>
 
@@ -167,7 +167,7 @@ export default function ApplicationsPage() {
         columns={columns}
         data={filteredApps}
         onRowClick={(item) => setSelectedApp(item)}
-        exportFilename="edge-application-portfolio.csv"
+        exportFilename="kaartech-application-portfolio.csv"
       />
 
       {/* Detail Drawer */}
