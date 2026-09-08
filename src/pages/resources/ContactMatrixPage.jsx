@@ -13,13 +13,13 @@ export default function ContactMatrixPage() {
   const [domainFilter, setDomainFilter] = useState('all');
 
   const escalations = [
-    { level: 'Level 1: Operational Triage', time: 'Immediate (within 15m)', role: 'General Shift Lead / On-Call Specialist', contact: '+971-50-XXX-1001', email: 'ams.l1@edge.ae', lead: 'Khalid Al Hashimi' },
-    { level: 'Level 2: Management Escalation', time: 'T + 1 Hour (P1/P2)', role: 'AMS Delivery Manager', contact: '+971-50-XXX-1002', email: 'ams.lead@edge.ae', lead: 'Fatima Al Zaabi' },
-    { level: 'Level 3: Executive SteerCom', time: 'T + 2 Hours (Critical Outage)', role: 'Program Director', contact: '+971-50-XXX-0001', email: 'director.ams@edge.ae', lead: 'Dr. Tariq Al Nuaimi' },
+    { level: 'Level 1: Operational Triage', time: 'Immediate (within 15m)', role: 'General Shift Lead / On-Call Specialist', contact: '+971-50-XXX-1001', email: 'ams.l1@kaartech.com', lead: 'Khalid Al Hashimi' },
+    { level: 'Level 2: Management Escalation', time: 'T + 1 Hour (P1/P2)', role: 'AMS Delivery Manager', contact: '+971-50-XXX-1002', email: 'ams.lead@kaartech.com', lead: 'Fatima Al Zaabi' },
+    { level: 'Level 3: Executive SteerCom', time: 'T + 2 Hours (Critical Outage)', role: 'Program Director', contact: '+971-50-XXX-0001', email: 'director.ams@kaartech.com', lead: 'Dr. Tariq Al Nuaimi' },
   ];
 
   const vendorHotlines = [
-    { vendor: 'SAP SE', contract: 'SAP MaxAttention / Premium', hotline: '1-800-SAP-CARE (Abu Dhabi Hub)', ref: 'EDGE C-Cust #8821092' },
+    { vendor: 'SAP SE', contract: 'SAP MaxAttention / Premium', hotline: '1-800-SAP-CARE (Abu Dhabi Hub)', ref: 'Enterprise Cust #8821092' },
     { vendor: 'Microsoft', contract: 'Unified Enterprise Support', hotline: '800-MICROSOFT (Azure UAE)', ref: 'Enterprise Agreement #MS-9912' },
     { vendor: 'Opentext', contract: 'Platinum Direct 24/7', hotline: '+971-4-XXX-8890', ref: 'Opentext Support PIN: 44219' },
   ];
@@ -106,7 +106,7 @@ export default function ContactMatrixPage() {
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px', flexWrap: 'wrap', gap: '12px' }}>
           <div>
             <h3 className="chart-card-title" style={{ margin: 0 }}>
-              EDGE AMS Resource Master Directory ({RESOURCES.length} Personnel)
+              KaarTech AMS Resource Master Directory ({RESOURCES.length} Personnel)
             </h3>
             <span style={{ fontSize: '11px', color: 'var(--text-tertiary)' }}>
               Official contact matrix for all dedicated delivery pod specialists and consultants.
