@@ -23,8 +23,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
 
   // Prefilled demo credentials so user only needs to click SIGN IN
-  const [corporateId, setCorporateId] = useState('edge.admin');
-  const [password, setPassword] = useState('Edge@2026');
+  const [corporateId, setCorporateId] = useState('kaartech.admin');
+  const [password, setPassword] = useState('KaarTech@2026');
   const [showPassword, setShowPassword] = useState(false);
   const [rememberMe, setRememberMe] = useState(true);
   const [success, setSuccess] = useState(false);
@@ -204,7 +204,7 @@ export default function LoginPage() {
                     className="form-input login-input"
                     value={corporateId}
                     onChange={(e) => { setCorporateId(e.target.value); clearError(); }}
-                    placeholder="edge.admin"
+                    placeholder="kaartech.admin"
                     autoComplete="username"
                     required
                     disabled={isLoading}
@@ -275,7 +275,7 @@ export default function LoginPage() {
             {/* Demo credentials hint */}
             <div className="login-demo-hint">
               <span className="badge badge-orange">DEMO</span>
-              <span>edge.admin / Edge@2026</span>
+              <span>kaartech.admin / KaarTech@2026</span>
             </div>
           </div>
         </div>

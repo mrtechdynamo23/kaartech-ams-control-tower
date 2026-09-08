@@ -16,16 +16,16 @@ const AuthContext = createContext(null);
 // Centralised demo credential config (Section 10).
 // In production, replace with enterprise SSO/OIDC.
 const DEMO_CREDENTIALS = {
-  id: 'edge.admin',
-  password: 'Edge@2026',
+  id: 'kaartech.admin',
+  password: 'KaarTech@2026',
   user: {
-    id: 'USR-001',
+    id: 'KT-001',
     name: 'Ahmed Al Mansouri',
-    email: 'ahmed.almansouri@edge.ae',
+    email: 'ahmed.almansouri@kaartech.com',
     role: 'AMS Lead',
     roleKey: 'AMS_LEAD',
-    avatar: 'AM',
-    entity: 'EDGE Corp.',
+    avatar: 'KT',
+    entity: 'KaarTech Solutions',
     department: 'AMS Operations',
   },
 };
@@ -126,10 +126,18 @@ export function AuthProvider({ children }) {
     // Simulate network delay for realistic UX
     await new Promise(resolve => setTimeout(resolve, 800));
 
-    if (
-      corporateId.toLowerCase() === DEMO_CREDENTIALS.id.toLowerCase() &&
-      password === DEMO_CREDENTIALS.password
-    ) {
+    const trimmedId = corporateId?.trim().toLowerCase();
+    const isIdMatch =
+      trimmedId === DEMO_CREDENTIALS.id.toLowerCase() ||
+      trimmedId === 'kaar.admin' ||
+      trimmedId === 'admin@kaartech.com' ||
+      trimmedId === 'edge.admin';
+    const isPasswordMatch =
+      password === DEMO_CREDENTIALS.password ||
+      password === 'Kaar@2026' ||
+      password === 'Edge@2026';
+
+    if (isIdMatch && isPasswordMatch) {
       const userData = { ...DEMO_CREDENTIALS.user };
       setUser(userData);
       try { sessionStorage.setItem('edge-ams-user', JSON.stringify(userData)); } catch {}
